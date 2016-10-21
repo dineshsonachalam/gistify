@@ -6,14 +6,19 @@ class TestClass {
     public static void main(String args[] ) throws Exception {
 
 		Scanner scan= new Scanner(System.in);
-		int[] a= new int[5];
-        for(int i=0;i<5;i++)
+
+        while(true)
         {
-        	a[i]=scan.nextInt();
+          int t=scan.nextInt();
+          if(t!=42)
+          {
+            System.out.println(t);
+          }
+          else
+          {
+            break;
+          }
         }
-        for(int i=0;i<3;i++)
-        {
-          System.out.println(a[i]);
-        }
+
     }
 }
