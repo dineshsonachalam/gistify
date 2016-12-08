@@ -3,44 +3,33 @@ import java.util.*;
 import java.text.*;
 import java.math.*;
 import java.util.regex.*;
-class solution
-{
-  public static void main(String[] args)
-  {
+public static void main(String[] args) {
 
-  //  char a[100];
-    Scanner scan = new Scanner(System.in);
-    int n=scan.nextInt();
-    String s = new String();
-    int binary;
+int[] a={1,2,3,4,5,6};
+permute(0, a);
+}
 
-    int[] a= new int[100];
-
-    for (int i=1;i<=n;i++)
-    {
-          a[i]= scan.nextInt();
-
+public  static void permute(int start, int[] input ) {
+        if (start == input.length) {
+            //System.out.println(input);
+            for(int x: input){
+            System.out.print(x);
+        }
+        System.out.println("");
+        return;
     }
-    int k =scan.nextInt(); //flipping the bits
-    if(a[k]==1)
-    {
-      a[k]=0;
-    }
-    else
-    {
-      a[k]=1;
-    }
+    for (int i = start; i < input.length; i++) {
+        // swapping
+        int temp = input[i];
+        input[i] = input[start];
+        input[start] = temp;
+       // swap(input[i], input[start]);
 
-    for (int i=1;i<=n;i++)
-    {
+        permute(start + 1, input);
+       // swap(input[i],input[start]);
 
-      int temp = a[i];
-      //converting the array of no into a string
-      s += Integer.toString(temp);
+        int temp2 = input[i];
+        input[i] = input[start];
+        input[start] = temp2;
     }
-    //convert the string into no
-    binary =Integer.parseInt(s);
-    System.out.println("Binary:"+binary);
-
-  }
 }
