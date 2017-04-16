@@ -9,6 +9,11 @@ class solution {
        int seq_length = scan.nextInt();
        String pass = scan.next();
        String seq = scan.next();
+      
+
+
+
+
        int combination_length = (seq_length - pass_length) + 1;
 
        //basic permutation of password
