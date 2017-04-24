@@ -16,7 +16,7 @@ public class Solution {
             {
             a[(i+k)%n]=in.nextInt();
         }
-        for(int i=0;i<q;i++)
+        for(int i=0;i<q☻;i++)
             {
             System.out.println(a[in.nextInt()]);
         }
