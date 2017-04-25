@@ -6,7 +6,7 @@ class solution
   {
     if(index==1)
     {
-      return 1; //Array is sorted
+      return 1; //Array is in sorted order
     }
     else {
       return (a[index-1]<a[index-2] ? 0:isArraySorted(index,a);
