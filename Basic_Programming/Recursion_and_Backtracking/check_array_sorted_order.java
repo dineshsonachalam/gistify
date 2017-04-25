@@ -6,10 +6,10 @@ class solution
   {
     if(index==1)
     {
-      return 1; //Array is in sorted order
+      return 1; //Array is in sorted order 1
     }
     else {
-      return (a[index-1]<a[index-2] ? 0:isArraySorted(index,a);
+      return (a[index-1]<a[index-2] ? 0 : (isArraySorted(index-1,a)));
     }
   }
   public static void main(String[] args)
