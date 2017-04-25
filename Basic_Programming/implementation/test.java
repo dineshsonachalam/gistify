@@ -28,24 +28,11 @@ class solution
                     int max = 0;
                     int min = 0;
 
-                    // A - Z
-                    if(no>=65 && no<=90)
-                    {
-                        //A-Z
-                        max = 90;
-                        min = 65;
-                    }
-                    else if (no>=97 && no<=122)
-                    {
-                        //a-z
-                        max = 122;
-                        min = 97;
-                    }
 
 
                       /* forward no--> is a prime*/
 
-                    for (int j=no+1;j<=max;j++)
+                    for (int j=no;j<=90;j++)
                     {
                         int no_check_term = j;
                         int flag =0;
@@ -67,15 +54,15 @@ class solution
                           }
 
                           front_prime = j;
-                        //  System.out.println("Prime_Forward:"+j);
+                      //    System.out.println("Prime_Forward:"+j);
                           break;
                         }
                     }
-                  //  System.out.println("Front Prime:"+front_prime);
-                  //  System.out.println("Front prime pos:"+front_prime_pos);
+                    System.out.println("Front Prime:"+front_prime);
+                    System.out.println("Front prime pos:"+front_prime_pos);
 
                     /*Checking if backward no is a prime*/
-                    for (int j=no-1;j>min;j--)
+                    for (int j=no;j>65;j--)
                     {
                         int no_check_term = j;
 
@@ -108,9 +95,9 @@ class solution
                     {
                       front_prime_pos = 95;
                     }
-                  //  System.out.println("Back Prime:"+back_prime);
-                  //  System.out.println("Back prime pos:"+back_prime_pos);
-                  //  System.out.println("Result");
+                    System.out.println("Back Prime:"+back_prime);
+                   System.out.println("Back prime pos:"+back_prime_pos);
+                    System.out.println("Result");
                     if(back_prime_pos == front_prime_pos) //equidistant
                     {
                       char a =(char) back_prime;
@@ -126,6 +113,7 @@ class solution
                       char a =(char) back_prime;
                       System.out.print(a);
                     }
+                    System.out.println();
 
         }
 
