@@ -40,7 +40,6 @@ func PostRequest(url string, method string, payload *strings.Reader, headers map
 	}
 	jsonResponse := make(map[string]string)
 	json.Unmarshal(body, &jsonResponse)
-	fmt.Println("JSON Response: ", jsonResponse)
 	gistUrl := jsonResponse["html_url"]
 	return UploadResponse{true, gistUrl}
 }
@@ -55,7 +54,6 @@ func UploadJsonToGist(fileName string, newFilename string, jsonString string, au
 	}
 	jsonData := fmt.Sprintf(`%s`, jsonString)
 	jsonBytes, _ := json.Marshal(jsonData)
-	fmt.Println("JSON Bytes: ", string(jsonBytes))
 	responseBody := fmt.Sprintf(`{
 		"public": true,
 		"files": {
@@ -65,8 +63,6 @@ func UploadJsonToGist(fileName string, newFilename string, jsonString string, au
 		},
 		"description":  "Generated from %s by %s. Gist created by user: %s."
 	}`, newFilename, string(jsonBytes), fileName, appUrl, author)
-
-	fmt.Println("Response Body: ", responseBody)
 	jsonPayload := string(responseBody)
 	payload := strings.NewReader(jsonPayload)
 	result := PostRequest(gistUrl, method, payload, headers)

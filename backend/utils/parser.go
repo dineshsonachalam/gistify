@@ -5,7 +5,10 @@ import (
 	"container/list"
 	"encoding/csv"
 	"encoding/json"
+	"fmt"
+	"strings"
 
+	"github.com/pelletier/go-toml"
 	"github.com/tealeg/xlsx"
 	"sigs.k8s.io/yaml"
 )
@@ -16,12 +19,37 @@ type ParserResponse struct {
 }
 
 func YAMLToJSON(data []byte) ParserResponse {
-	parsedData, err := yaml.YAMLToJSON(data)
-	jsonString := string(parsedData)
+	fmt.Println("====> YAML to JSON")
+	parsedData, _ := yaml.YAMLToJSON(data)
+	jsonMap := make(map[string]interface{})
+	if err := json.Unmarshal(parsedData, &jsonMap); err != nil {
+		return ParserResponse{}
+	} else {
+		parsedJson, err := json.MarshalIndent(jsonMap, "", "  ")
+		jsonString := string(parsedJson)
+		if err != nil {
+			return ParserResponse{}
+		} else {
+			return ParserResponse{true, jsonString}
+		}
+	}
+
+}
+
+func TOMLToJSON(data []byte) ParserResponse {
+	readerData := strings.NewReader(string(data))
+	tree, err := toml.LoadReader(readerData)
 	if err != nil {
 		return ParserResponse{}
 	} else {
-		return ParserResponse{true, jsonString}
+		treeMap := tree.ToMap()
+		bytes, err := json.MarshalIndent(treeMap, "", "  ")
+		if err != nil {
+			return ParserResponse{}
+		} else {
+			jsonString := string(bytes[:])
+			return ParserResponse{true, jsonString}
+		}
 	}
 }
 
@@ -48,7 +76,8 @@ func CSVToJSON(data []byte) ParserResponse {
 			}
 		}
 		if len(parsedData) > 0 {
-			parsedJson, err := json.Marshal(parsedData)
+			fmt.Printf("var2 = %T\n", parsedData)
+			parsedJson, err := json.MarshalIndent(parsedData, "", "  ")
 			if err != nil {
 				return ParserResponse{}
 			} else {
@@ -94,7 +123,7 @@ func ExcelToJSON(data []byte) ParserResponse {
 			}
 		}
 		if len(parsedData) > 0 {
-			parsedJson, err := json.Marshal(parsedData)
+			parsedJson, err := json.MarshalIndent(parsedData, "", "  ")
 			if err != nil {
 				return ParserResponse{}
 			} else {

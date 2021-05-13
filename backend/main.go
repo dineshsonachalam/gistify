@@ -2,7 +2,6 @@ package main
 
 import (
 	"any-json/utils"
-	"fmt"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
@@ -39,8 +38,10 @@ func main() {
 		ParserResponse := utils.ParserResponse{}
 		UploadResponse := utils.UploadResponse{}
 
-		if fileExtension == ".yaml" {
+		if fileExtension == ".yaml" || fileExtension == ".yml" {
 			ParserResponse = utils.YAMLToJSON(file)
+		} else if fileExtension == ".toml" {
+			ParserResponse = utils.TOMLToJSON(file)
 		} else if fileExtension == ".csv" {
 			ParserResponse = utils.CSVToJSON(file)
 		} else if fileExtension == ".xlsx" {
@@ -50,13 +51,11 @@ func main() {
 		apiResponse.JsonString = ParserResponse.JsonString
 		if apiResponse.FileParsed == true {
 			UploadResponse = utils.UploadJsonToGist(filename, newFilename, apiResponse.JsonString, author, appUrl)
-			fmt.Println("===>if")
 			c.JSON(200, gin.H{
 				"isFileUploaded": UploadResponse.FileUpload,
 				"gist_url":       UploadResponse.GistURL,
 			})
 		} else {
-			fmt.Println("===>else")
 			c.JSON(200, gin.H{
 				"isFileUploaded": UploadResponse.FileUpload,
 				"gist_url":       UploadResponse.GistURL,
