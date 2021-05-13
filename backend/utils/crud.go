@@ -12,6 +12,7 @@ import (
 type UploadResponse struct {
 	FileUpload bool
 	GistURL    string
+	GistId     string
 }
 
 func PostRequest(url string, method string, payload *strings.Reader, headers map[string]string) UploadResponse {
@@ -23,25 +24,28 @@ func PostRequest(url string, method string, payload *strings.Reader, headers map
 	for header_key, header_value := range headers {
 		req.Header.Add(header_key, header_value)
 	}
-
 	response, err := client.Do(req)
 	if err != nil {
 		return UploadResponse{}
 	}
 	defer response.Body.Close()
 
-	// if response.StatusCode != http.StatusOK {
-	// 	return UploadResponse{}
-	// }
-
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
+	if response.StatusCode != 200 && response.StatusCode != 201 {
 		return UploadResponse{}
 	}
-	jsonResponse := make(map[string]string)
-	json.Unmarshal(body, &jsonResponse)
-	gistUrl := jsonResponse["html_url"]
-	return UploadResponse{true, gistUrl}
+	if response.StatusCode >= 200 && response.StatusCode <= 299 {
+		body, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			return UploadResponse{}
+		}
+		jsonResponse := make(map[string]string)
+		json.Unmarshal(body, &jsonResponse)
+		gistUrl := jsonResponse["html_url"]
+		gistId := jsonResponse["id"]
+		return UploadResponse{true, gistUrl, gistId}
+	} else {
+		return UploadResponse{}
+	}
 }
 
 func UploadJsonToGist(fileName string, newFilename string, jsonString string, author string, appUrl string) UploadResponse {

@@ -19,7 +19,6 @@ type ParserResponse struct {
 }
 
 func YAMLToJSON(data []byte) ParserResponse {
-	fmt.Println("====> YAML to JSON")
 	parsedData, _ := yaml.YAMLToJSON(data)
 	jsonMap := make(map[string]interface{})
 	if err := json.Unmarshal(parsedData, &jsonMap); err != nil {

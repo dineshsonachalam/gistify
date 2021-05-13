@@ -54,11 +54,13 @@ func main() {
 			c.JSON(200, gin.H{
 				"isFileUploaded": UploadResponse.FileUpload,
 				"gist_url":       UploadResponse.GistURL,
+				"gist_id":        UploadResponse.GistId,
 			})
 		} else {
 			c.JSON(200, gin.H{
 				"isFileUploaded": UploadResponse.FileUpload,
 				"gist_url":       UploadResponse.GistURL,
+				"gist_id":        UploadResponse.GistId,
 			})
 		}
 	})
