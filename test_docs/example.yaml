@@ -1,0 +1,30 @@
+version: '3'
+services:  
+  elasticsearch:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.12.0"
+    networks:
+      - frontend
+    restart: always
+    volumes:
+      - ./ES_DATA:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+    healthcheck:
+      test: ["CMD", "curl","-s" ,"-f", "http://localhost:9200/_cat/health"]
+      retries: 6
+      
+  backend:
+    image: "dineshsonachalam/tech-courses-search-engine-backend:latest"
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - frontend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - elasticsearch
+networks:
+  frontend:
+
