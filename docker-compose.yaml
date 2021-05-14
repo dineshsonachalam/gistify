@@ -1,0 +1,23 @@
+version: '3'
+services:  
+  postgres:
+    image: "postgres:9.6.21"
+    networks:
+      - frontend
+    ports:
+      - "5432:5432"
+    restart: always
+    user: 1000:1000
+    environment:
+      - POSTGRES_USER=dinesh
+      - POSTGRES_PASSWORD=simple
+      - POSTGRES_DB=anyjson
+    volumes:
+      - ./data:/var/lib/postgresql/data # persist data even if container shuts down
+networks:
+  frontend:
+
+
+
+
+

@@ -19,7 +19,11 @@ type AppStats struct {
 func main() {
 	router := gin.Default()
 	apiResponse := AppStats{}
+	databaseUrl := "postgres://dinesh:simple@postgres:5432/anyjson"
 	appUrl := "https://anyjson.dineshsonachalam.com"
+	userId := "1"
+
+	author := "https://github.com/dineshsonachalam"
 	router.POST("/upload", func(c *gin.Context) {
 		formFile, err := c.FormFile("uploadfile")
 		if err != nil {
@@ -34,7 +38,7 @@ func main() {
 		filename := filepath.Base(formFile.Filename)
 		fileExtension := filepath.Ext(filename)
 		newFilename := (strings.Split(filename, "."))[0] + ".json"
-		author := "https://github.com/dineshsonachalam"
+
 		ParserResponse := utils.ParserResponse{}
 		UploadResponse := utils.UploadResponse{}
 
