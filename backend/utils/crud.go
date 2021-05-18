@@ -2,73 +2,97 @@ package utils
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 )
 
-type UploadResponse struct {
-	FileUpload bool
-	GistURL    string
-	GistId     string
+type HttpRequest struct {
+	Status       bool
+	ResponseBody map[string]interface{}
 }
 
-func PostRequest(url string, method string, payload *strings.Reader, headers map[string]string) UploadResponse {
+func GetRequest(url string, payload *strings.Reader, headers map[string]string) HttpRequest {
 	client := &http.Client{}
-	req, err := http.NewRequest(method, url, payload)
+	req, err := http.NewRequest("GET", url, payload)
 	if err != nil {
-		return UploadResponse{}
-	}
-	for header_key, header_value := range headers {
-		req.Header.Add(header_key, header_value)
-	}
-	response, err := client.Do(req)
-	if err != nil {
-		return UploadResponse{}
-	}
-	defer response.Body.Close()
-
-	if response.StatusCode != 200 && response.StatusCode != 201 {
-		return UploadResponse{}
-	}
-	if response.StatusCode >= 200 && response.StatusCode <= 299 {
-		body, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			return UploadResponse{}
-		}
-		jsonResponse := make(map[string]string)
-		json.Unmarshal(body, &jsonResponse)
-		gistUrl := jsonResponse["html_url"]
-		gistId := jsonResponse["id"]
-		return UploadResponse{true, gistUrl, gistId}
+		return HttpRequest{}
 	} else {
-		return UploadResponse{}
+		for header_key, header_value := range headers {
+			req.Header.Add(header_key, header_value)
+		}
+		response, err := client.Do(req)
+		if err != nil {
+			return HttpRequest{}
+		}
+		defer response.Body.Close()
+
+		if response.StatusCode >= 200 && response.StatusCode <= 299 {
+			responseBody, err := ioutil.ReadAll(response.Body)
+			if err != nil {
+				return HttpRequest{}
+			}
+			jsonResponse := make(map[string]interface{})
+			json.Unmarshal(responseBody, &jsonResponse)
+			return HttpRequest{true, jsonResponse}
+		} else {
+			return HttpRequest{}
+		}
 	}
 }
 
-func UploadJsonToGist(fileName string, newFilename string, jsonString string, author string, appUrl string) UploadResponse {
-	gistBearerToken := os.Getenv("GIST_API_TOKEN")
-	gistUrl := "https://api.github.com/gists"
-	method := "POST"
-	headers := map[string]string{
-		"Authorization": fmt.Sprintf("Bearer %s", gistBearerToken),
-		"Content-Type":  "application/json",
-	}
-	jsonData := fmt.Sprintf(`%s`, jsonString)
-	jsonBytes, _ := json.Marshal(jsonData)
-	responseBody := fmt.Sprintf(`{
-		"public": true,
-		"files": {
-			"%s": {
-				"content": %s
+func PostRequest(url string, payload *strings.Reader, headers map[string]string) HttpRequest {
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", url, payload)
+	if err != nil {
+		return HttpRequest{}
+	} else {
+		for header_key, header_value := range headers {
+			req.Header.Add(header_key, header_value)
+		}
+		response, err := client.Do(req)
+		if err != nil {
+			return HttpRequest{}
+		}
+		defer response.Body.Close()
+		if response.StatusCode >= 200 && response.StatusCode <= 299 {
+			responseBody, err := ioutil.ReadAll(response.Body)
+			if err != nil {
+				return HttpRequest{}
 			}
-		},
-		"description":  "Generated from %s by %s. Gist created by user: %s."
-	}`, newFilename, string(jsonBytes), fileName, appUrl, author)
-	jsonPayload := string(responseBody)
-	payload := strings.NewReader(jsonPayload)
-	result := PostRequest(gistUrl, method, payload, headers)
-	return result
+			jsonResponse := make(map[string]interface{})
+			json.Unmarshal(responseBody, &jsonResponse)
+			return HttpRequest{true, jsonResponse}
+		} else {
+			return HttpRequest{}
+		}
+	}
+}
+
+func DeleteRequest(url string, payload *strings.Reader, headers map[string]string) HttpRequest {
+	client := &http.Client{}
+	req, err := http.NewRequest("DELETE", url, payload)
+	if err != nil {
+		return HttpRequest{}
+	} else {
+		for header_key, header_value := range headers {
+			req.Header.Add(header_key, header_value)
+		}
+		response, err := client.Do(req)
+		if err != nil {
+			return HttpRequest{}
+		}
+		defer response.Body.Close()
+		if response.StatusCode >= 200 && response.StatusCode <= 299 {
+			responseBody, err := ioutil.ReadAll(response.Body)
+			if err != nil {
+				return HttpRequest{}
+			}
+			jsonResponse := make(map[string]interface{})
+			json.Unmarshal(responseBody, &jsonResponse)
+			return HttpRequest{true, jsonResponse}
+		} else {
+			return HttpRequest{}
+		}
+	}
 }

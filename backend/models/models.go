@@ -132,18 +132,3 @@ func GetAllGist(databaseUrl string, github_user_id string) []map[string]interfac
 		}
 	}
 }
-
-// func main() {
-// 	databaseUrl := "postgres://dinesh:simple@postgres:5432/anyjson"
-// 	fmt.Println(CreateUserTable(databaseUrl))
-// 	fmt.Println(CreateGistTable(databaseUrl))
-// 	// gistData := GetAllGist(databaseUrl, "1")
-// 	// for gist
-// 	// fmt.Println("gist data: ", gistData)
-// 	// fmt.Println(CreateUser(databaseUrl, "3", "rani", "rani@gmail.com"))
-// 	// userExists, username := GetUser(databaseUrl, "1")
-// 	// fmt.Println("userExists: ", userExists)
-// 	// fmt.Println("Username: ", username)
-// 	// fmt.Println(CreateGist(databaseUrl, "112", "app.json", "co.mod", "1"))
-// 	// fmt.Println(DeleteGist(databaseUrl, "104", "1"))
-// }
