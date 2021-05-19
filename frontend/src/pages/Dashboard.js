@@ -1,6 +1,7 @@
 import { Redirect } from "react-router"
 import React from 'react';
 import NavBar from "../components/NavBar"
+import UploadGist from "../components/UploadGist"
 import PageFooter from "../components/Footer"
 import { Layout} from 'antd';
 import Cookies from 'universal-cookie';
@@ -24,7 +25,7 @@ class Dashboard extends React.Component {
             <NavBar />  
             <Content>
                 <div style={{ padding: 24}}>
-                  <p>Dashboard Page</p>
+                  <UploadGist />
                 </div>
             </Content>
             <PageFooter/>

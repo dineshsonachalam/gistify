@@ -3,6 +3,7 @@ import jwt_decode from "jwt-decode";
 import { Redirect } from "react-router"
 import React from 'react';
 import NavBar from "../components/NavBar"
+import UploadGist from "../components/UploadGist"
 import PageFooter from "../components/Footer"
 import { connect } from 'react-redux';
 import { Layout} from 'antd';
@@ -20,7 +21,7 @@ class Login extends React.Component {
             <NavBar />  
             <Content>
                 <div style={{ padding: 24}}>
-                  <p>Login Page</p>
+                  <UploadGist />
                 </div>
             </Content>
             <PageFooter/>
