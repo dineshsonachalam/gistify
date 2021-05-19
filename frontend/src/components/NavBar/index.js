@@ -1,41 +1,54 @@
+import { withRouter } from "react-router"
 import React from 'react';
 import ResponsiveAntMenu from './ResponsiveAntMenu'
 import { Menu } from 'antd';
 import { 
     GithubOutlined,
-  } from '@ant-design/icons';
-import { updateIsLoggedInStatus } from "./../../redux/actions";
+} from '@ant-design/icons';
 import { connect } from 'react-redux';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 class NavBar extends React.Component {
+  LogoutClickEvent = (e) => {
+    e.preventDefault();
+    console.log('The link was clicked.');
+    cookies.remove('token');
+    window.location = "/";
+  };
   AuthButton() {
     if(this.props.isLoggedInStatus){
-      <Menu.Item style={{float: 'right'}} key='/oauth/authorize' className={'menu-home'}>
-        <a href="https://github.com/login/oauth/authorize?client_id=e4159913c485d2c56c88&redirect_uri=http://localhost:8003/oauth/redirect">Logout</a>
-      </Menu.Item>   
+      return (
+        <Menu.Item style={{float: 'right'}} key='/logout' className={'menu-home'}>
+          <a href="#" onClick={this.LogoutClickEvent}>Logout</a>
+        </Menu.Item>   
+      );
+
     }else {
+      let GithubClientURL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&redirect_uri=${process.env.REACT_APP_API_ENDPOINT}/oauth/redirect`;
       return (
         <Menu.Item style={{float: 'right'}} key='/oauth/authorize' className={'menu-home'}>
-          <a href="https://github.com/login/oauth/authorize?client_id=e4159913c485d2c56c88&redirect_uri=http://localhost:8003/oauth/redirect">Login with github  <GithubOutlined /></a>
+          <a href={GithubClientURL}>Login with github  <GithubOutlined /></a>
         </Menu.Item>
       );
     }
   }
   render(){
+    let jwtToken = cookies.get('token');
     return (
-            <ResponsiveAntMenu
-                mobileMenuContent={isMenuShown => isMenuShown ? <button>Close</button> : <button>Open</button>}
-                menuClassName={'responsive-ant-menu'}
-            >
-                {(onLinkClick) =>          
-                    <Menu theme='dark'>
-                        <Menu.Item key='/' className={'menu-home'}>
-                            <a onClick={onLinkClick} href={'/'}>GoAnyJSON</a>
-                        </Menu.Item>
-                        {this.AuthButton()}
-                    </Menu>                    
-                }
-            </ResponsiveAntMenu>
+                <ResponsiveAntMenu
+                    mobileMenuContent={isMenuShown => isMenuShown ? <button>Close</button> : <button>Open</button>}
+                    menuClassName={'responsive-ant-menu'}
+                >
+                    {(onLinkClick) =>          
+                        <Menu theme='dark'>
+                            <Menu.Item key='/' className={'menu-home'}>
+                                <a onClick={onLinkClick} href={'/'}>GoAnyJSON</a>
+                            </Menu.Item>
+                            {this.AuthButton()}
+                        </Menu>                    
+                    }
+                </ResponsiveAntMenu>
     );
   }
 }
@@ -46,10 +59,10 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    updateIsLoggedInStatus: (isLoggedInStatus) => dispatch(updateIsLoggedInStatus(isLoggedInStatus))
-  }
+  return {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+
+
 

@@ -1,23 +1,58 @@
+import { Redirect } from "react-router"
 import React from 'react';
 import NavBar from "../components/NavBar"
 import PageFooter from "../components/Footer"
 import { Layout} from 'antd';
+import Cookies from 'universal-cookie';
+import { updateIsLoggedInStatus, updateUserId, updateUsername } from "./../redux/actions";
+import { connect } from 'react-redux';
+import jwt_decode from "jwt-decode";
+const cookies = new Cookies();
 const { Content } = Layout;
 
 class Dashboard extends React.Component {
+  DashboardPage(jwtToken){
+    if(!jwtToken){
+      return(<Redirect to="/" />);
+    }else{
+      let decodedJwtToken = jwt_decode(jwtToken);
+      this.props.updateIsLoggedInStatus(true)
+      this.props.updateUserId(decodedJwtToken.userId)
+      this.props.updateUsername(decodedJwtToken.username)
+      return (
+        <div>
+            <NavBar />  
+            <Content>
+                <div style={{ padding: 24}}>
+                  <p>Dashboard Page</p>
+                </div>
+            </Content>
+            <PageFooter/>
+        </div>
+      );
+    }
+  } 
   render(){
     return (
-      <div>
-        <NavBar />  
-        <Content>
-            <div style={{ padding: 24}}>
-              <p>Dashboard Page</p>
-            </div>
-        </Content>
-        <PageFooter/>
-      </div>
+        <div>
+          {this.DashboardPage(cookies.get('token'))}
+        </div>
     );
   }
 }
 
-export default Dashboard;
+// https://stackoverflow.com/a/50225424
+const mapStateToProps = (state) => {
+  return state.anyJsonReducer;
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateIsLoggedInStatus: (isLoggedInStatus) => dispatch(updateIsLoggedInStatus(isLoggedInStatus)),
+    updateUserId: (user_id) => dispatch(updateUserId(user_id)),
+    updateUsername: (username) => dispatch(updateUsername(username)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+

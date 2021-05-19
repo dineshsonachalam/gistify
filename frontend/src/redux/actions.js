@@ -11,11 +11,11 @@ export const updateIsLoggedInStatus = (isLoggedInStatus) => {
   }
 }
 
-export const updateUserId = (user_id) => {
+export const updateUserId = (userId) => {
     return {
               type: UPDATE_USER_ID,
               payload: {
-                user_id: user_id
+                userId: userId
               }
     }
 }
