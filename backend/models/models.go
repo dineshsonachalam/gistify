@@ -106,7 +106,7 @@ func GetAllGist(databaseUrl string, github_user_id string) []map[string]interfac
 		return gistData
 	} else {
 		defer conn.Close(context.Background())
-		rows, err := conn.Query(context.Background(), "SELECT id, filename, url, date_trunc('second', created_at) as created_at FROM gist WHERE github_user_id=$1 ORDER  BY created_at", github_user_id)
+		rows, err := conn.Query(context.Background(), "SELECT id, filename, url, date_trunc('second', created_at) as created_at FROM gist WHERE github_user_id=$1 ORDER BY created_at DESC NULLS LAST", github_user_id)
 		if err != nil {
 			return gistData
 		} else {
@@ -121,11 +121,43 @@ func GetAllGist(databaseUrl string, github_user_id string) []map[string]interfac
 					return gistData
 				} else {
 					var gist = make(map[string]interface{})
-					gist["id"] = id
+					gist["key"] = id
 					gist["filename"] = filename
 					gist["url"] = url
 					gist["created_at"] = created_at
 					gistData = append(gistData, gist)
+				}
+			}
+			return gistData
+		}
+	}
+}
+
+func GetGist(databaseUrl string, gist_id string) map[string]interface{} {
+	conn, err := pgx.Connect(context.Background(), databaseUrl)
+	gistData := make(map[string]interface{})
+	if err != nil {
+		return gistData
+	} else {
+		defer conn.Close(context.Background())
+		rows, err := conn.Query(context.Background(), "SELECT id, filename, url, date_trunc('second', created_at) as created_at FROM gist WHERE id=$1", gist_id)
+		if err != nil {
+			return gistData
+		} else {
+			defer rows.Close()
+			for rows.Next() {
+				var id string
+				var filename string
+				var url string
+				var created_at time.Time
+				err = rows.Scan(&id, &filename, &url, &created_at)
+				if err != nil {
+					return gistData
+				} else {
+					gistData["key"] = id
+					gistData["filename"] = filename
+					gistData["url"] = url
+					gistData["created_at"] = created_at
 				}
 			}
 			return gistData

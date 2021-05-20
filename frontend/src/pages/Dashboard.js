@@ -3,6 +3,7 @@ import React from 'react';
 import NavBar from "../components/NavBar"
 import UploadGist from "../components/UploadGist"
 import PageFooter from "../components/Footer"
+import GistTable from "../components/GistTable"
 import { Layout} from 'antd';
 import Cookies from 'universal-cookie';
 import { updateIsLoggedInStatus, updateUserId, updateUsername } from "./../redux/actions";
@@ -26,6 +27,11 @@ class Dashboard extends React.Component {
             <Content>
                 <div style={{ padding: 24}}>
                   <UploadGist />
+                </div>
+                <div style={{ padding: 24}}>
+                  {this.props.isLoggedInStatus &&
+                    <GistTable />
+                  }
                 </div>
             </Content>
             <PageFooter/>

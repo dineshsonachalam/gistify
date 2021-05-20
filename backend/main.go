@@ -44,8 +44,8 @@ func main() {
 			if !isUserAlreadyPresent {
 				models.CreateUser(DATABASE_URL, userInfo["id"], userInfo["username"], userDetails.Email)
 			}
-			// Expiry time in minutes - Setting expiry time as 15 minute
-			c.SetCookie("token", jwtAccessToken, (15 * 60), "/", "localhost", false, false)
+			// Expiry time in minutes - Setting expiry time as 30 minute
+			c.SetCookie("token", jwtAccessToken, (30 * 60), "/", "localhost", false, false)
 			c.Redirect(301, "http://localhost:3000/"+userInfo["username"])
 		})
 
@@ -70,6 +70,7 @@ func main() {
 						"gist_url":       "",
 						"gist_id":        "",
 						"jwtAccessToken": "",
+						"message":        "Invalid file format",
 					})
 				} else {
 					// Get raw file bytes - no reader method
@@ -101,13 +102,15 @@ func main() {
 							"gist_url":       UploadResponse.GistURL,
 							"gist_id":        UploadResponse.GistId,
 							"jwtAccessToken": tokenString,
+							"message":        "Conversion and upload was successful",
 						})
 					} else {
 						c.JSON(200, gin.H{
 							"isFileUploaded": false,
 							"gist_url":       "",
 							"gist_id":        "",
-							"jwtAccessToken": "",
+							"jwtAccessToken": tokenString,
+							"message":        "Conversion to JSON failed",
 						})
 					}
 				}
@@ -117,6 +120,7 @@ func main() {
 					"gist_url":       "",
 					"gist_id":        "",
 					"jwtAccessToken": "",
+					"message":        "Invalid JWT access token",
 				})
 			}
 		})
@@ -143,6 +147,7 @@ func main() {
 					"Content-Type":  "application/json",
 				}
 				GistDeleteResponse := utils.DeleteRequest(gist_url, payload, headers)
+				models.DeleteGist(DATABASE_URL, gist_id, githubUserId)
 				if GistDeleteResponse.Status {
 					c.JSON(200, gin.H{
 						"isDeleted":      true,
@@ -177,6 +182,35 @@ func main() {
 					tokenString = auth.CreateJwtAccessToken(userInfo, JWT_SECRET_KEY)
 				}
 				gistData := models.GetAllGist(DATABASE_URL, id)
+				c.JSON(200, gin.H{
+					"isDeleted":      true,
+					"gistData":       gistData,
+					"jwtAccessToken": tokenString,
+				})
+			} else {
+				c.JSON(200, gin.H{
+					"isDeleted":      false,
+					"jwtAccessToken": "",
+				})
+			}
+		})
+
+		// Get a gist by GIST id
+		r.GET("/gists/:gist_id", func(c *gin.Context) {
+			gist_id := c.Param("gist_id")
+			const BEARER_SCHEMA = "Bearer"
+			authHeader := c.GetHeader("Authorization")
+			tokenString := authHeader[len(BEARER_SCHEMA)+1:]
+			isValidJwtToken := auth.ValidateJwtAccessToken(tokenString, JWT_SECRET_KEY)
+			if isValidJwtToken {
+				tokenExpiry, id, username := auth.IsJwtAccessTokenExpiryInFiveMin(tokenString)
+				userInfo := make(map[string]string)
+				userInfo["id"] = id
+				userInfo["username"] = username
+				if tokenExpiry {
+					tokenString = auth.CreateJwtAccessToken(userInfo, JWT_SECRET_KEY)
+				}
+				gistData := models.GetGist(DATABASE_URL, gist_id)
 				c.JSON(200, gin.H{
 					"isDeleted":      true,
 					"gistData":       gistData,

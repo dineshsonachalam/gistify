@@ -1,39 +1,134 @@
-import { Upload, Button, Space } from 'antd';
+import { Upload, Button, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { updateGists } from "./../../redux/actions";
 import { connect } from 'react-redux';
 import React from 'react';
 import { PageHeader} from 'antd';
+import reqwest from 'reqwest';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 
 class UploadGist extends React.Component {
-  render(){
-    return (
-        <div>
-            <PageHeader
-                title="Convert YAML/TOML/CSV/EXCEL to JSON and upload to Gist"
-                        >
-                  <Space direction="vertical" style={{ width: '100%' }} size="large">
-                      <Upload
-                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        listType="picture"
-                        maxCount={1}
-                      >
-                      <Button icon={<UploadOutlined />}>Select File</Button>
-                    </Upload>
-                  </Space>
-            </PageHeader>
-        </div>
+  state = {
+    fileList: [],
+    uploading: false,
+  };
 
+  handleUpload = () => {
+    const { fileList } = this.state;
+    const formData = new FormData();
+    fileList.forEach(file => {
+      formData.append("uploadfile", file, file.name);
+    });
+
+    this.setState({
+      uploading: true,
+    });
+
+    // You can use any AJAX library you like
+    let gistUrl = `${process.env.REACT_APP_API_ENDPOINT}/gists`
+    let jwtToken = cookies.get('token')
+    cookies.set('token', jwtToken)
+
+    reqwest({
+      url: gistUrl,
+      method: 'post',
+      headers: {
+        'Authorization': `Bearer ${jwtToken}`
+      },      
+      processData: false,
+      data: formData,
+      success: (resp) => {
+        let gist_id = resp.gist_id
+        let url = `${process.env.REACT_APP_API_ENDPOINT}/gists/${gist_id}`
+        let headers = new Headers();
+        headers.append("Authorization", `Bearer ${jwtToken}`) 
+        let requestOptions = {
+            method: 'GET',
+            headers: headers,
+            redirect: 'follow'
+        };
+
+        // this.props.updateGists((this.props.gists).push(result.gistData))
+        // this.props.updateGists(gistData.push(result.gistData)),
+        let gistData = this.props.gists
+        fetch(url, requestOptions)
+          .then(response => response.json())
+          .then(result => gistData.push(result.gistData), this.props.updateGists(gistData))
+          .catch(error => console.log('error', error));
+        this.setState({
+          fileList: [],
+          uploading: false,
+        });
+        message.success(resp.message);
+      },
+      error: () => {
+        this.setState({
+          uploading: false,
+        });
+        message.error('Conversion failed');
+      },
+    });
+  };
+
+  render() {
+    const { uploading, fileList } = this.state;
+    const props = {
+      onRemove: file => {
+        this.setState(state => {
+          const index = state.fileList.indexOf(file);
+          const newFileList = state.fileList.slice();
+          newFileList.splice(index, 1);
+          return {
+            fileList: newFileList,
+          };
+        });
+      },
+      beforeUpload: file => {
+        if(this.state.fileList<2){
+          this.setState(state => ({
+            fileList: [...state.fileList, file],
+          }));
+          console.log(file.name);
+        }
+
+
+        return false;
+      },
+      fileList,
+    };
+
+    return (
+      <PageHeader
+      title="Convert YAML/TOML/CSV/EXCEL to JSON and upload to Gist"
+              >
+        <Upload {...props}>
+          <Button icon={<UploadOutlined />}>Select File</Button>
+        </Upload>
+        <Button
+          type="primary"
+          onClick={this.handleUpload}
+          disabled={fileList.length === 0 || this.props.isLoggedInStatus === false}
+          loading={uploading}
+          style={{ marginTop: 16 }}
+        >
+          {uploading ? 'Uploading' : 'Start conversion'}
+        </Button>
+      </PageHeader>
     );
   }
-} 
+}
+
 // https://stackoverflow.com/a/50225424
 const mapStateToProps = (state) => {
   return state.anyJsonReducer;
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    updateGists: (gists) => dispatch(updateGists(gists)),
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UploadGist);
