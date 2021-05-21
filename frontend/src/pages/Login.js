@@ -13,9 +13,7 @@ const cookies = new Cookies();
 
 class Login extends React.Component {
   LoginPage(jwtToken){
-    console.log("JWT TOken: ", jwtToken)
     if(!jwtToken){
-      console.log("IF condition")
       return(
           <div>
             <NavBar />  

@@ -1,5 +1,4 @@
 import React from "react";
-// import PageFooter from "../components/Footer"
 import Login from "./pages/Login"
 import Dashboard from "./pages/Dashboard"
 import {

@@ -28,7 +28,7 @@ func CreateGistTable(databaseUrl string) bool {
 		return false
 	} else {
 		defer conn.Close(context.Background())
-		_, err = conn.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS gist(id VARCHAR(255) PRIMARY KEY NOT NULL, filename VARCHAR(255) NOT NULL, url VARCHAR(255) NOT NULL, github_user_id VARCHAR(255) NOT NULL references app_user(id), created_at TIMESTAMPTZ DEFAULT Now())")
+		_, err = conn.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS gist(id VARCHAR(255) PRIMARY KEY NOT NULL, filename VARCHAR(255) NOT NULL, generated_from VARCHAR(255) NOT NULL, url VARCHAR(255) NOT NULL, github_user_id VARCHAR(255) NOT NULL references app_user(id), created_at TIMESTAMPTZ DEFAULT Now())")
 		if err != nil {
 			return false
 		} else {
@@ -69,13 +69,13 @@ func GetUser(databaseUrl string, id string) (bool, string) {
 	}
 }
 
-func CreateGist(databaseUrl string, id string, filename string, url string, github_user_id string) bool {
+func CreateGist(databaseUrl string, id string, filename string, generated_from string, url string, github_user_id string) bool {
 	conn, err := pgx.Connect(context.Background(), databaseUrl)
 	if err != nil {
 		return false
 	} else {
 		defer conn.Close(context.Background())
-		_, err = conn.Exec(context.Background(), "INSERT INTO gist(id, filename, url, github_user_id) VALUES($1, $2, $3, $4)", id, filename, url, github_user_id)
+		_, err = conn.Exec(context.Background(), "INSERT INTO gist(id, filename, generated_from, url, github_user_id) VALUES($1, $2, $3, $4, $5)", id, filename, generated_from, url, github_user_id)
 		if err != nil {
 			return false
 		} else {
@@ -106,7 +106,7 @@ func GetAllGist(databaseUrl string, github_user_id string) []map[string]interfac
 		return gistData
 	} else {
 		defer conn.Close(context.Background())
-		rows, err := conn.Query(context.Background(), "SELECT id, filename, url, date_trunc('second', created_at) as created_at FROM gist WHERE github_user_id=$1 ORDER BY created_at DESC NULLS LAST", github_user_id)
+		rows, err := conn.Query(context.Background(), "SELECT id, filename, generated_from, url, date_trunc('second', created_at) as created_at FROM gist WHERE github_user_id=$1 ORDER BY created_at DESC NULLS LAST", github_user_id)
 		if err != nil {
 			return gistData
 		} else {
@@ -114,15 +114,17 @@ func GetAllGist(databaseUrl string, github_user_id string) []map[string]interfac
 			for rows.Next() {
 				var id string
 				var filename string
+				var generated_from string
 				var url string
 				var created_at time.Time
-				err = rows.Scan(&id, &filename, &url, &created_at)
+				err = rows.Scan(&id, &filename, &generated_from, &url, &created_at)
 				if err != nil {
 					return gistData
 				} else {
 					var gist = make(map[string]interface{})
 					gist["key"] = id
 					gist["filename"] = filename
+					gist["generated_from"] = generated_from
 					gist["url"] = url
 					gist["created_at"] = created_at
 					gistData = append(gistData, gist)
@@ -140,7 +142,7 @@ func GetGist(databaseUrl string, gist_id string) map[string]interface{} {
 		return gistData
 	} else {
 		defer conn.Close(context.Background())
-		rows, err := conn.Query(context.Background(), "SELECT id, filename, url, date_trunc('second', created_at) as created_at FROM gist WHERE id=$1", gist_id)
+		rows, err := conn.Query(context.Background(), "SELECT id, filename, generated_from, url, date_trunc('second', created_at) as created_at FROM gist WHERE id=$1", gist_id)
 		if err != nil {
 			return gistData
 		} else {
@@ -148,14 +150,16 @@ func GetGist(databaseUrl string, gist_id string) map[string]interface{} {
 			for rows.Next() {
 				var id string
 				var filename string
+				var generated_from string
 				var url string
 				var created_at time.Time
-				err = rows.Scan(&id, &filename, &url, &created_at)
+				err = rows.Scan(&id, &filename, &generated_from, &url, &created_at)
 				if err != nil {
 					return gistData
 				} else {
 					gistData["key"] = id
 					gistData["filename"] = filename
+					gistData["generated_from"] = generated_from
 					gistData["url"] = url
 					gistData["created_at"] = created_at
 				}

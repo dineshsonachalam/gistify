@@ -44,8 +44,8 @@ func main() {
 			if !isUserAlreadyPresent {
 				models.CreateUser(DATABASE_URL, userInfo["id"], userInfo["username"], userDetails.Email)
 			}
-			// Expiry time in minutes - Setting expiry time as 30 minute
-			c.SetCookie("token", jwtAccessToken, (30 * 60), "/", "localhost", false, false)
+			// Expiry time in minutes - Setting expiry time as 15 minute
+			c.SetCookie("token", jwtAccessToken, (15 * 60), "/", "localhost", false, false)
 			c.Redirect(301, "http://localhost:3000/"+userInfo["username"])
 		})
 
@@ -92,11 +92,12 @@ func main() {
 						ParserResponse = utils.ExcelToJSON(file)
 					}
 
+					fileExtension = strings.Replace(fileExtension, ".", "", -1)
 					FileParsed := ParserResponse.FileParsed
 					JsonString := ParserResponse.JsonString
 					if FileParsed {
 						UploadResponse := utils.UploadJsonToGist(GIST_API_TOKEN, filename, newFilename, JsonString, userInfo["username"], GOANYJSON_DEV_APP_URL)
-						models.CreateGist(DATABASE_URL, UploadResponse.GistId, newFilename, UploadResponse.GistURL, githubUserId)
+						models.CreateGist(DATABASE_URL, UploadResponse.GistId, newFilename, fileExtension, UploadResponse.GistURL, githubUserId)
 						c.JSON(200, gin.H{
 							"isFileUploaded": UploadResponse.FileUpload,
 							"gist_url":       UploadResponse.GistURL,

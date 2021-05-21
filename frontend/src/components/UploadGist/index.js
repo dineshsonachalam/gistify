@@ -1,6 +1,6 @@
 import { Upload, Button, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { updateGists } from "./../../redux/actions";
+import { addGist } from "./../../redux/actions";
 import { connect } from 'react-redux';
 import React from 'react';
 import { PageHeader} from 'antd';
@@ -48,14 +48,10 @@ class UploadGist extends React.Component {
             method: 'GET',
             headers: headers,
             redirect: 'follow'
-        };
-
-        // this.props.updateGists((this.props.gists).push(result.gistData))
-        // this.props.updateGists(gistData.push(result.gistData)),
-        let gistData = this.props.gists
+        }; 
         fetch(url, requestOptions)
           .then(response => response.json())
-          .then(result => gistData.push(result.gistData), this.props.updateGists(gistData))
+          .then(result => this.props.addGist(result.gistData))
           .catch(error => console.log('error', error));
         this.setState({
           fileList: [],
@@ -90,7 +86,6 @@ class UploadGist extends React.Component {
           this.setState(state => ({
             fileList: [...state.fileList, file],
           }));
-          console.log(file.name);
         }
 
 
@@ -127,7 +122,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateGists: (gists) => dispatch(updateGists(gists)),
+    addGist: (gist) => dispatch(addGist(gist)),
   }
 }
 

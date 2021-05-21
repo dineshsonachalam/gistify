@@ -1,4 +1,3 @@
-import { withRouter } from "react-router"
 import React from 'react';
 import ResponsiveAntMenu from './ResponsiveAntMenu'
 import { Menu } from 'antd';
@@ -12,20 +11,22 @@ const cookies = new Cookies();
 class NavBar extends React.Component {
   LogoutClickEvent = (e) => {
     e.preventDefault();
-    console.log('The link was clicked.');
     cookies.remove('token');
     window.location = "/";
   };
+
   AuthButton() {
     if(this.props.isLoggedInStatus){
       return (
         <Menu.Item style={{float: 'right'}} key='/logout' className={'menu-home'}>
-          <a href="#" onClick={this.LogoutClickEvent}>Logout</a>
+          {// eslint-disable-next-line
+          }<a href="#" onClick={this.LogoutClickEvent}>Logout</a>
         </Menu.Item>   
       );
 
     }else {
       let GithubClientURL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&redirect_uri=${process.env.REACT_APP_API_ENDPOINT}/oauth/redirect`;
+      /* eslint-disable */
       return (
         <Menu.Item style={{float: 'right'}} key='/oauth/authorize' className={'menu-home'}>
           <a href={GithubClientURL}>Login with github  <GithubOutlined /></a>
@@ -34,7 +35,6 @@ class NavBar extends React.Component {
     }
   }
   render(){
-    let jwtToken = cookies.get('token');
     return (
                 <ResponsiveAntMenu
                     mobileMenuContent={isMenuShown => isMenuShown ? <button>Close</button> : <button>Open</button>}

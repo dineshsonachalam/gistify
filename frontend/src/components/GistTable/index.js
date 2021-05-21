@@ -1,12 +1,9 @@
-import jwt_decode from "jwt-decode";
 import Cookies from 'universal-cookie';
-import React, { useContext, useState, useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
 import 'antd/dist/antd.css';
-import { Table, Input, Button, Popconfirm, Form } from 'antd';
+import { Table, Popconfirm} from 'antd';
 import { updateGists } from "./../../redux/actions";
 import { connect } from 'react-redux';
-const EditableContext = React.createContext(null);
 const cookies = new Cookies();
 
 class GistTable extends React.Component {
@@ -50,19 +47,20 @@ class GistTable extends React.Component {
 
     render(){
         const  dataSource  = this.props.gists;
-        const dataSourceLength = dataSource.length;
-        
-        console.log("Data source: ", dataSource);
         let columns = [
             {
               title: 'Filename',
               dataIndex: 'filename',
             },
             {
+              title: 'Generated from',
+              dataIndex: 'generated_from',
+            },
+            {
               title: 'URL',
               dataIndex: 'url',
               render: (text, row, index) => {
-                return <a href={text} target="_blank">{text}</a>;
+                return <a href={text} target="_blank" rel="noreferrer">{text}</a>;
               },
             },
             {
@@ -75,7 +73,8 @@ class GistTable extends React.Component {
               render: (_, record) =>
               this.props.gists.length >= 1 ? (
                   <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-                    <a>Delete</a>
+                    {// eslint-disable-next-line
+                    }<a>Delete</a>
                   </Popconfirm>
                 ) : null,
             },
