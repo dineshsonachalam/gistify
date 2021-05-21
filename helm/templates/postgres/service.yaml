@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.postgres.appName }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.postgres.appName }}
+spec:
+  ports:
+  - port: {{ .Values.postgres.containerPort }}
+    name: web
+  selector:
+    app: {{ .Values.postgres.appName }}

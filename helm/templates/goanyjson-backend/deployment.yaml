@@ -1,0 +1,25 @@
+# 1. Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.anyJsonBackend.appName }}
+  name: {{ .Values.anyJsonBackend.appName }}
+  namespace: {{ .Values.namespace }}
+spec:  
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.anyJsonBackend.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.anyJsonBackend.appName }}
+    spec:
+      containers:
+      - name: {{ .Values.anyJsonBackend.appName }}
+        image: {{ .Values.anyJsonBackend.image }}
+        imagePullPolicy: Always          
+        ports:
+        - containerPort: {{ .Values.anyJsonBackend.containerPort }}   
+          name: {{ .Values.anyJsonBackend.appName }}   

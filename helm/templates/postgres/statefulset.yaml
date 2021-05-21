@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.postgres.appName }}
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.postgres.appName }} 
+  serviceName: {{ .Values.postgres.appName }}
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.postgres.appName }} # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      initContainers:
+      - name: init-sysctl
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh","-c"]
+        args: ["sysctl -w vm.max_map_count=262144; chown -R 1000:1000 {{ .Values.postgres.volumeMountsPath }}"]
+        securityContext:
+          privileged: true
+        volumeMounts:
+          - name: {{ .Values.postgres.volumeMountsName }}
+            mountPath: {{ .Values.postgres.volumeMountsPath }}
+      containers:
+      - name: {{ .Values.postgres.appName }}
+        image: {{ .Values.postgres.image }}
+        args:
+          - --character-set-server=utf8
+          - --innodb_log_buffer_size=800M
+          - --innodb_log_file_size=80M
+          - --max_allowed_packet=8M 
+        env:
+        - name: postgres_ROOT_PASSWORD
+          value: "simple"
+        - name: postgres_DATABASE
+          value: "adp"
+        ports:
+        - containerPort: {{ .Values.postgres.containerPort }}
+          name: {{ .Values.postgres.appName }}
+        volumeMounts:
+        - name: {{ .Values.postgres.volumeMountsName }}
+          mountPath: {{ .Values.postgres.volumeMountsPath }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Values.postgres.volumeMountsName }}
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi

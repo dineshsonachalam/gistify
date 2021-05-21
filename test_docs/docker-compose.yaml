@@ -16,7 +16,7 @@ services:
       retries: 6
       
   backend:
-    image: "dineshsonachalam/tech-courses-search-engine-backend:latest"
+    image: "dineshsonachalam/go-any-json-backend:latest"
     environment:
       - PYTHONUNBUFFERED=1
     networks:
