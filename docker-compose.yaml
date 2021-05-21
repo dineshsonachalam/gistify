@@ -14,6 +14,23 @@ services:
       - POSTGRES_DB=anyjson
     volumes:
       - ./data:/var/lib/postgresql/data # persist data even if container shuts down
+  
+  backend:
+    image: "dineshsonachalam/go-any-json-backend:latest"
+    environment:
+      - GOANYJSON_APP_ENV=${GOANYJSON_APP_ENV}
+      - GOANYJSON_DEV_APP_URL=${GOANYJSON_DEV_APP_URL}
+      - GOANYJSON_DEV_GITHUB_CLIENT_ID=${GOANYJSON_DEV_GITHUB_CLIENT_ID}
+      - GOANYJSON_DEV_GITHUB_CLIENT_SECRET=${GOANYJSON_DEV_GITHUB_CLIENT_SECRET}
+      - GOANYJSON_DEV_JWT_SECRET_KEY=${GOANYJSON_DEV_JWT_SECRET_KEY}
+      - GOANYJSON_DEV_GIST_API_TOKEN=${GOANYJSON_DEV_GIST_API_TOKEN}"
+    networks:
+      - frontend
+    ports:
+      - "8003:8003"
+    depends_on:
+      - postgres
+
 networks:
   frontend:
 

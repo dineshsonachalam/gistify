@@ -107,3 +107,9 @@ curl --location --request POST 'https://api.github.com/gists' \
 2. /login -> User login (POST)
 3. /gists -> Get all gists of authenticated user. (GET)
 4. /gists/{gist_id} -> Delete a gist (DELETE)
+
+### Dev guidelines:
+```
+docker build --no-cache -t dineshsonachalam/go-any-json-backend:latest -f backend.Dockerfile .
+
+```
