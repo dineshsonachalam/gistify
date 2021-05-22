@@ -52,6 +52,7 @@ func main() {
 			if !isUserAlreadyPresent {
 				models.CreateUser(DATABASE_URL, userInfo["id"], userInfo["username"], userDetails.Email)
 			}
+			fmt.Println("===>userInfo: ", userInfo)
 			// Expiry time in minutes - Setting expiry time as 15 minute
 			c.SetCookie("token", jwtAccessToken, (15 * 60), "/", COOKIE_DOMAIN, false, false)
 			c.Redirect(301, GOANYJSON_APP_URL+userInfo["username"])
