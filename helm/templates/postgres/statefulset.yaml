@@ -29,16 +29,13 @@ spec:
       containers:
       - name: {{ .Values.postgres.appName }}
         image: {{ .Values.postgres.image }}
-        args:
-          - --character-set-server=utf8
-          - --innodb_log_buffer_size=800M
-          - --innodb_log_file_size=80M
-          - --max_allowed_packet=8M 
         env:
-        - name: postgres_ROOT_PASSWORD
+        - name: POSTGRES_USER
+          value: "dinesh"
+        - name: POSTGRES_PASSWORD
           value: "simple"
-        - name: postgres_DATABASE
-          value: "adp"
+        - name: POSTGRES_DB
+          value: "anyjson"
         ports:
         - containerPort: {{ .Values.postgres.containerPort }}
           name: {{ .Values.postgres.appName }}

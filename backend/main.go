@@ -20,7 +20,7 @@ func main() {
 	GITHUB_CLIENT_SECRET := os.Getenv(fmt.Sprintf("GOANYJSON_%s_GITHUB_CLIENT_SECRET", ENV))
 	JWT_SECRET_KEY := []byte(os.Getenv(fmt.Sprintf("GOANYJSON_%s_JWT_SECRET_KEY", ENV)))
 	GIST_API_TOKEN := os.Getenv(fmt.Sprintf("GOANYJSON_%s_GIST_API_TOKEN", ENV))
-	GOANYJSON_DEV_APP_URL := os.Getenv(fmt.Sprintf("GOANYJSON_%s_APP_URL", ENV))
+	GOANYJSON_APP_URL := os.Getenv(fmt.Sprintf("GOANYJSON_%s_APP_URL", ENV))
 	DATABASE_URL := "postgres://dinesh:simple@postgres:5432/anyjson"
 
 	r := gin.Default()
@@ -45,7 +45,7 @@ func main() {
 				models.CreateUser(DATABASE_URL, userInfo["id"], userInfo["username"], userDetails.Email)
 			}
 			// Expiry time in minutes - Setting expiry time as 15 minute
-			c.SetCookie("token", jwtAccessToken, (15 * 60), "/", "localhost", false, false)
+			c.SetCookie("token", jwtAccessToken, (15 * 60), "/", GOANYJSON_APP_URL, false, false)
 			c.Redirect(301, "http://localhost:3000/"+userInfo["username"])
 		})
 
@@ -96,7 +96,7 @@ func main() {
 					FileParsed := ParserResponse.FileParsed
 					JsonString := ParserResponse.JsonString
 					if FileParsed {
-						UploadResponse := utils.UploadJsonToGist(GIST_API_TOKEN, filename, newFilename, JsonString, userInfo["username"], GOANYJSON_DEV_APP_URL)
+						UploadResponse := utils.UploadJsonToGist(GIST_API_TOKEN, filename, newFilename, JsonString, userInfo["username"], GOANYJSON_APP_URL)
 						models.CreateGist(DATABASE_URL, UploadResponse.GistId, newFilename, fileExtension, UploadResponse.GistURL, githubUserId)
 						c.JSON(200, gin.H{
 							"isFileUploaded": UploadResponse.FileUpload,

@@ -113,3 +113,32 @@ curl --location --request POST 'https://api.github.com/gists' \
 docker build --no-cache -t dineshsonachalam/go-any-json-backend:latest -f backend.Dockerfile .
 
 ```
+
+###
+```
+helm install go-any-json-app ./helm
+```
+
+kubectl get secrets/goanyjson-secrets -n=dinesh --template='{{.data.GOANYJSON_PROD_GIST_API_TOKEN | base64decode }}'
+
+
+
+dineshsonachalam@macbook GoAnyJSON %
+
+```
+helm template go-any-json-app ./helm
+```
+
+GOANYJSON_PROD_GIST_API_TOKEN
+
+```
+helm uninstall go-any-json-app
+```
+
+```
+dineshsonachalam@macbook GoAnyJSON % kubectl get sts -n=dinesh
+NAME            READY   AGE
+elasticsearch   1/1     13d
+mysql           1/1     12d
+postgres        1/1     23s
+```
