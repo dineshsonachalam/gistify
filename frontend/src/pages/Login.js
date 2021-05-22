@@ -34,7 +34,7 @@ class Login extends React.Component {
   render(){
     return (
       <div>
-        {this.LoginPage(cookies.get('token'))}
+        {this.LoginPage(cookies.get('token', {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`}))}
       </div>
     );
   }

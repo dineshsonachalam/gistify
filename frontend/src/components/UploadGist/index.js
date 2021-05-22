@@ -28,9 +28,9 @@ class UploadGist extends React.Component {
 
     // You can use any AJAX library you like
     let gistUrl = `${process.env.REACT_APP_API_ENDPOINT}/gists`
-    let jwtToken = cookies.get('token')
-    cookies.set('token', jwtToken)
-
+    let jwtToken = cookies.get('token', {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});    
+    cookies.set('token', jwtToken, {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});    
+    
     reqwest({
       url: gistUrl,
       method: 'post',

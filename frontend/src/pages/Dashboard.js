@@ -42,7 +42,7 @@ class Dashboard extends React.Component {
   render(){
     return (
         <div>
-          {this.DashboardPage(cookies.get('token'))}
+          {this.DashboardPage(cookies.get('token', {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`}))}
         </div>
     );
   }

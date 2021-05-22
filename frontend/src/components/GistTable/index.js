@@ -14,7 +14,7 @@ class GistTable extends React.Component {
 
     async componentDidMount(){
         let url = `${process.env.REACT_APP_API_ENDPOINT}/gists`
-        let jwtToken = cookies.get('token')
+        let jwtToken = cookies.get('token', {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});
         let headers = new Headers();
         headers.append("Authorization", `Bearer ${jwtToken}`) 
         let requestOptions = {
@@ -29,7 +29,7 @@ class GistTable extends React.Component {
     handleDelete = (key) => {
         const dataSource = this.props.gists;
         let url = `${process.env.REACT_APP_API_ENDPOINT}/gists/${key}`
-        let jwtToken = cookies.get('token')
+        let jwtToken = cookies.get('token', {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});
         let headers = new Headers();
         headers.append("Authorization", `Bearer ${jwtToken}`) 
         let requestOptions = {
