@@ -26,7 +26,7 @@ func main() {
 	if ENV == "DEV" {
 		COOKIE_DOMAIN = "localhost"
 	} else {
-		COOKIE_DOMAIN = ".goanyjson.dineshsonachalam.com"
+		COOKIE_DOMAIN = ".dineshsonachalam.com"
 	}
 
 	fmt.Println("===> GOANYJSON_APP_URL: ", GOANYJSON_APP_URL)
