@@ -22,6 +22,12 @@ func main() {
 	GIST_API_TOKEN := os.Getenv(fmt.Sprintf("GOANYJSON_%s_GIST_API_TOKEN", ENV))
 	GOANYJSON_APP_URL := os.Getenv(fmt.Sprintf("GOANYJSON_%s_APP_URL", ENV))
 	DATABASE_URL := "postgres://dinesh:simple@postgres:5432/anyjson"
+	var COOKIE_DOMAIN string
+	if ENV == "DEV" {
+		COOKIE_DOMAIN = "localhost"
+	} else {
+		COOKIE_DOMAIN = ".goanyjson.dineshsonachalam.com"
+	}
 
 	fmt.Println("===> GOANYJSON_APP_URL: ", GOANYJSON_APP_URL)
 
@@ -47,7 +53,7 @@ func main() {
 				models.CreateUser(DATABASE_URL, userInfo["id"], userInfo["username"], userDetails.Email)
 			}
 			// Expiry time in minutes - Setting expiry time as 15 minute
-			c.SetCookie("token", jwtAccessToken, (15 * 60), "/", GOANYJSON_APP_URL, false, false)
+			c.SetCookie("token", jwtAccessToken, (15 * 60), "/", COOKIE_DOMAIN, false, false)
 			c.Redirect(301, GOANYJSON_APP_URL+userInfo["username"])
 		})
 
