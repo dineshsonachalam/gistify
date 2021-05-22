@@ -13,7 +13,7 @@ services:
       - POSTGRES_PASSWORD=simple
       - POSTGRES_DB=dinesh-micro-apps
     volumes:
-      - ./data:/var/lib/postgresql/data # persist data even if container shuts down
+      - ./data:/var/lib/postgresql/data:z # persist data even if container shuts down
   
   backend:
     image: "dineshsonachalam/go-any-json-backend:latest"
