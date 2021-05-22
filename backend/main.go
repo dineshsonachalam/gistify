@@ -24,7 +24,7 @@ func main() {
 	DATABASE_URL := "postgres://dinesh:simple@postgres:5432/anyjson"
 	var COOKIE_DOMAIN string
 	if ENV == "DEV" {
-		COOKIE_DOMAIN = "localhost"
+		COOKIE_DOMAIN = ".localhost"
 	} else {
 		COOKIE_DOMAIN = ".dineshsonachalam.com"
 	}
