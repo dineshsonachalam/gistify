@@ -46,7 +46,7 @@ func main() {
 			}
 			// Expiry time in minutes - Setting expiry time as 15 minute
 			c.SetCookie("token", jwtAccessToken, (15 * 60), "/", GOANYJSON_APP_URL, false, false)
-			c.Redirect(301, "http://localhost:3000/"+userInfo["username"])
+			c.Redirect(301, GOANYJSON_APP_URL+userInfo["username"])
 		})
 
 		// Create a new gist
