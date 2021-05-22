@@ -23,6 +23,8 @@ func main() {
 	GOANYJSON_APP_URL := os.Getenv(fmt.Sprintf("GOANYJSON_%s_APP_URL", ENV))
 	DATABASE_URL := "postgres://dinesh:simple@postgres:5432/anyjson"
 
+	fmt.Println("===> GOANYJSON_APP_URL: ", GOANYJSON_APP_URL)
+
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
 
