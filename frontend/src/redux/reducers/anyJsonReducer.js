@@ -20,8 +20,14 @@ const anyJsonReducer = (state=initialState, actions) => {
             return {...state, gists: [...actions.payload.gists]}
         case ADD_GIST:
             let gist = actions.payload.gist
-            let gists = state.gists
-            return {...state, gists: [gist, ...gists]}
+            if (Object.keys(gist).length){
+                let gists = state.gists
+                return {...state, gists: [gist, ...gists]}
+            }else{
+                return {...state, gists: [...state.gists]}
+            }
+            
+
         default:
             return {...state}
     }
