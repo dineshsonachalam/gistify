@@ -17,7 +17,7 @@ anyJsonBackend:
 anyJsonBackendSecrets:
     appName: goanyjson-secrets
     GOANYJSON_APP_ENV: "PROD"
-    GOANYJSON_PROD_APP_URL: "https://anyjson.dineshsonachalam.com"
+    GOANYJSON_PROD_APP_URL: "https://goanyjson.dineshsonachalam.com/"
     GOANYJSON_PROD_GITHUB_CLIENT_ID: "${GOANYJSON_PROD_GITHUB_CLIENT_ID}"
     GOANYJSON_PROD_GITHUB_CLIENT_SECRET: "${GOANYJSON_PROD_GITHUB_CLIENT_SECRET}"
     GOANYJSON_PROD_JWT_SECRET_KEY: "${GOANYJSON_PROD_JWT_SECRET_KEY}"
