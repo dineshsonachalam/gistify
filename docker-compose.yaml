@@ -11,7 +11,7 @@ services:
     environment:
       - POSTGRES_USER=dinesh
       - POSTGRES_PASSWORD=simple
-      - POSTGRES_DB=anyjson
+      - POSTGRES_DB=dinesh-micro-apps
     volumes:
       - ./data:/var/lib/postgresql/data # persist data even if container shuts down
   

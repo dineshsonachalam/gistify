@@ -35,7 +35,7 @@ spec:
         - name: POSTGRES_PASSWORD
           value: "simple"
         - name: POSTGRES_DB
-          value: "anyjson"
+          value: "dinesh-micro-apps"
         ports:
         - containerPort: {{ .Values.postgres.containerPort }}
           name: {{ .Values.postgres.appName }}

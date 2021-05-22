@@ -21,7 +21,7 @@ func main() {
 	JWT_SECRET_KEY := []byte(os.Getenv(fmt.Sprintf("GOANYJSON_%s_JWT_SECRET_KEY", ENV)))
 	GIST_API_TOKEN := os.Getenv(fmt.Sprintf("GOANYJSON_%s_GIST_API_TOKEN", ENV))
 	GOANYJSON_APP_URL := os.Getenv(fmt.Sprintf("GOANYJSON_%s_APP_URL", ENV))
-	DATABASE_URL := "postgres://dinesh:simple@postgres:5432/anyjson"
+	DATABASE_URL := "postgres://dinesh:simple@postgres:5432/dinesh-micro-apps"
 	var COOKIE_DOMAIN string
 	if ENV == "DEV" {
 		COOKIE_DOMAIN = ".localhost"
