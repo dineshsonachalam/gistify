@@ -11,7 +11,7 @@ const cookies = new Cookies();
 class NavBar extends React.Component {
   LogoutClickEvent = (e) => {
     e.preventDefault();
-    cookies.remove('token');
+    cookies.remove('token', {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});
     window.location = "/";
   };
 
