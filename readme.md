@@ -1,4 +1,14 @@
-
+<p align="center">
+  <img src="https://i.imgur.com/hVDyC3I.png" alt="Gistify">
+</p>
+<p align="center">
+    <em>Powered by Go, PostgreSQL, React, Redux, Kubernetes, Cypress E2E and Github CI/CD</em>
+</p>
+<p  align="center">
+  <a href="https://github.com/dineshsonachalam/Gistify/actions/workflows/k8-deploy.yml" alt="CI/CD status">
+      <img src="https://github.com/dineshsonachalam/Gistify/actions/workflows/k8-deploy.yml/badge.svg" />
+  </a>
+</p>
 
 
 ### Pending work:
