@@ -5,5 +5,5 @@ import (
 )
 
 func GetEnv() string {
-	return os.Getenv("GOANYJSON_APP_ENV")
+	return os.Getenv("GISTIFY_APP_ENV")
 }

@@ -25,7 +25,7 @@ class NavBar extends React.Component {
       );
 
     }else {
-      let GithubClientURL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&redirect_uri=${process.env.REACT_APP_API_ENDPOINT}/oauth/redirect`;
+      let GithubClientURL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_API_ENDPOINT}/oauth/redirect`;
       /* eslint-disable */
       return (
         <Menu.Item style={{float: 'right'}} key='/oauth/authorize' className={'menu-home'}>
@@ -43,7 +43,7 @@ class NavBar extends React.Component {
                     {(onLinkClick) =>          
                         <Menu theme='dark'>
                             <Menu.Item key='/' className={'menu-home'}>
-                                <a onClick={onLinkClick} href={'/'}>GoAnyJSON</a>
+                                <a onClick={onLinkClick} href={'/'}>Gistify</a>
                             </Menu.Item>
                             {this.AuthButton()}
                         </Menu>                    
@@ -55,7 +55,7 @@ class NavBar extends React.Component {
 
 // https://stackoverflow.com/a/50225424
 const mapStateToProps = (state) => {
-  return state.anyJsonReducer;
+  return state.gistifyReducer;
 }
 
 const mapDispatchToProps = (dispatch) => {

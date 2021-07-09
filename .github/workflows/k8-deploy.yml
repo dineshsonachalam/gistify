@@ -18,16 +18,16 @@ jobs:
         run: |
           npm i --prefix frontend
           npm run build --prefix frontend
-          docker build --no-cache -t dineshsonachalam/go-any-json-backend:latest -f backend.Dockerfile .
-          docker build --no-cache -t dineshsonachalam/go-any-json-frontend:latest -f frontend.Dockerfile .  
+          docker build --no-cache -t dineshsonachalam/gistify-backend:latest -f backend.Dockerfile .
+          docker build --no-cache -t dineshsonachalam/gistify-frontend:latest -f frontend.Dockerfile .  
 
       - name: Log into registry
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push image
         run: |
-          docker push dineshsonachalam/go-any-json-backend:latest
-          docker push dineshsonachalam/go-any-json-frontend:latest
+          docker push dineshsonachalam/gistify-backend:latest
+          docker push dineshsonachalam/gistify-frontend:latest
 
   deploy-to-k8-cluster:
     needs: upload-docker-image
@@ -39,7 +39,7 @@ jobs:
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       with:
-        args: rollout restart deployment goanyjson-api -n=dinesh
+        args: rollout restart deployment gistify-api -n=dinesh
 
     - name: Verify deployment for Backend app
       uses: steebchen/kubectl@master
@@ -47,14 +47,14 @@ jobs:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         KUBECTL_VERSION: "1.15"
       with:
-        args: rollout status deployment/goanyjson-api -n=dinesh
+        args: rollout status deployment/gistify-api -n=dinesh
 
     - name: Frontend deployment rolling restart to fetch recently build docker image from docker hub.
       uses: steebchen/kubectl@master
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       with:
-        args: rollout restart deployment goanyjson-ui -n=dinesh
+        args: rollout restart deployment gistify-ui -n=dinesh
 
     - name: Verify deployment for Frontend app
       uses: steebchen/kubectl@master
@@ -62,4 +62,4 @@ jobs:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         KUBECTL_VERSION: "1.15"
       with:
-        args: rollout status deployment/goanyjson-ui -n=dinesh
+        args: rollout status deployment/gistify-ui -n=dinesh

@@ -2,7 +2,7 @@ package auth
 
 import (
 	"fmt"
-	"goanyjson/utils"
+	"gistify/utils"
 	"strconv"
 	"strings"
 )

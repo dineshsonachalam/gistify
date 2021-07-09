@@ -8,7 +8,7 @@ const initialState = {
     gists: []
 };
 
-const anyJsonReducer = (state=initialState, actions) => {
+const gistifyReducer = (state=initialState, actions) => {
     switch(actions.type) {
         case UPDATE_IS_LOGGED_IN_STATUS:
             return {...state, isLoggedInStatus: actions.payload.isLoggedInStatus}
@@ -33,7 +33,7 @@ const anyJsonReducer = (state=initialState, actions) => {
     }
 }
 
-export default anyJsonReducer;
+export default gistifyReducer;
 
 
 

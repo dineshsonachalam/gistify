@@ -8,23 +8,23 @@ postgres:
     volumeMountsName: postgres-data
     volumeMountsPath: /data/pgdata
 
-anyJsonBackend:
-    image: dineshsonachalam/go-any-json-backend:latest
+gistifyBackend:
+    image: dineshsonachalam/gistify-backend:latest
     containerPort: 8003
-    appName: goanyjson-api
-    ingressRoute: (Host(`api-goanyjson.dineshsonachalam.com`))
+    appName: gistify-api
+    ingressRoute: (Host(`api-gistify.dineshsonachalam.com`))
 
-anyJsonBackendSecrets:
-    appName: goanyjson-secrets
-    GOANYJSON_APP_ENV: "PROD"
-    GOANYJSON_PROD_APP_URL: "https://goanyjson.dineshsonachalam.com/"
-    GOANYJSON_PROD_GITHUB_CLIENT_ID: "${GOANYJSON_PROD_GITHUB_CLIENT_ID}"
-    GOANYJSON_PROD_GITHUB_CLIENT_SECRET: "${GOANYJSON_PROD_GITHUB_CLIENT_SECRET}"
-    GOANYJSON_PROD_JWT_SECRET_KEY: "${GOANYJSON_PROD_JWT_SECRET_KEY}"
-    GOANYJSON_PROD_GIST_API_TOKEN: "${GOANYJSON_PROD_GIST_API_TOKEN}"
+gistifyBackendSecrets:
+    appName: gistify-secrets
+    GISTIFY_APP_ENV: "PROD"
+    GISTIFY_PROD_APP_URL: "https://gistify.dineshsonachalam.com/"
+    GISTIFY_PROD_GITHUB_CLIENT_ID: "${GISTIFY_PROD_GITHUB_CLIENT_ID}"
+    GISTIFY_PROD_GITHUB_CLIENT_SECRET: "${GISTIFY_PROD_GITHUB_CLIENT_SECRET}"
+    GISTIFY_PROD_JWT_SECRET_KEY: "${GISTIFY_PROD_JWT_SECRET_KEY}"
+    GISTIFY_PROD_GIST_API_TOKEN: "${GISTIFY_PROD_GIST_API_TOKEN}"
 
-anyJsonFrontend:
-    image: dineshsonachalam/go-any-json-frontend:latest
+gistifyFrontend:
+    image: dineshsonachalam/gistify-frontend:latest
     containerPort: 3000   
-    appName: goanyjson-ui
-    ingressRoute: (Host(`goanyjson.dineshsonachalam.com`))
+    appName: gistify-ui
+    ingressRoute: (Host(`gistify.dineshsonachalam.com`))

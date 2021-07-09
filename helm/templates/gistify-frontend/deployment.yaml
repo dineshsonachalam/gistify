@@ -1,0 +1,25 @@
+# 1. Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.gistifyFrontend.appName }}
+  name: {{ .Values.gistifyFrontend.appName }}
+  namespace: {{ .Values.namespace }}
+spec:  
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.gistifyFrontend.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.gistifyFrontend.appName }}
+    spec:
+      containers:
+      - name: {{ .Values.gistifyFrontend.appName }}
+        image: {{ .Values.gistifyFrontend.image }}
+        imagePullPolicy: Always          
+        ports:
+        - containerPort: {{ .Values.gistifyFrontend.containerPort }}   
+          name: {{ .Values.gistifyFrontend.appName }}   

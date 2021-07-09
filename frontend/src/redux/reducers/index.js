@@ -2,6 +2,6 @@
 
 import { combineReducers } from "redux";
 
-import anyJsonReducer from "./anyJsonReducer";
+import gistifyReducer from "./gistifyReducer";
 
-export default combineReducers({ anyJsonReducer });
+export default combineReducers({ gistifyReducer });

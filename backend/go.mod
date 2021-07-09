@@ -1,4 +1,4 @@
-module goanyjson
+module gistify
 
 go 1.16
 

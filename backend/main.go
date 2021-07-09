@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"goanyjson/auth"
-	"goanyjson/middleware"
-	"goanyjson/models"
-	"goanyjson/utils"
+	"gistify/auth"
+	"gistify/middleware"
+	"gistify/models"
+	"gistify/utils"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -16,11 +16,11 @@ import (
 
 func main() {
 	ENV := utils.GetEnv()
-	GITHUB_CLIENT_ID := os.Getenv(fmt.Sprintf("GOANYJSON_%s_GITHUB_CLIENT_ID", ENV))
-	GITHUB_CLIENT_SECRET := os.Getenv(fmt.Sprintf("GOANYJSON_%s_GITHUB_CLIENT_SECRET", ENV))
-	JWT_SECRET_KEY := []byte(os.Getenv(fmt.Sprintf("GOANYJSON_%s_JWT_SECRET_KEY", ENV)))
-	GIST_API_TOKEN := os.Getenv(fmt.Sprintf("GOANYJSON_%s_GIST_API_TOKEN", ENV))
-	GOANYJSON_APP_URL := os.Getenv(fmt.Sprintf("GOANYJSON_%s_APP_URL", ENV))
+	GITHUB_CLIENT_ID := os.Getenv(fmt.Sprintf("GISTIFY_%s_GITHUB_CLIENT_ID", ENV))
+	GITHUB_CLIENT_SECRET := os.Getenv(fmt.Sprintf("GISTIFY_%s_GITHUB_CLIENT_SECRET", ENV))
+	JWT_SECRET_KEY := []byte(os.Getenv(fmt.Sprintf("GISTIFY_%s_JWT_SECRET_KEY", ENV)))
+	GIST_API_TOKEN := os.Getenv(fmt.Sprintf("GISTIFY_%s_GIST_API_TOKEN", ENV))
+	GISTIFY_APP_URL := os.Getenv(fmt.Sprintf("GISTIFY_%s_APP_URL", ENV))
 	DATABASE_URL := "postgres://dinesh:simple@postgres:5432/dinesh-micro-apps"
 	var COOKIE_DOMAIN string
 	if ENV == "DEV" {
@@ -51,7 +51,7 @@ func main() {
 			}
 			// Expiry time in minutes - Setting expiry time as 40 minute
 			c.SetCookie("token", jwtAccessToken, (40 * 60), "/", COOKIE_DOMAIN, false, false)
-			c.Redirect(301, GOANYJSON_APP_URL+userInfo["username"])
+			c.Redirect(301, GISTIFY_APP_URL+userInfo["username"])
 		})
 
 		// Create a new gist
@@ -101,7 +101,7 @@ func main() {
 					FileParsed := ParserResponse.FileParsed
 					JsonString := ParserResponse.JsonString
 					if FileParsed {
-						UploadResponse := utils.UploadJsonToGist(GIST_API_TOKEN, filename, newFilename, JsonString, userInfo["username"], GOANYJSON_APP_URL)
+						UploadResponse := utils.UploadJsonToGist(GIST_API_TOKEN, filename, newFilename, JsonString, userInfo["username"], GISTIFY_APP_URL)
 						models.CreateGist(DATABASE_URL, UploadResponse.GistId, newFilename, fileExtension, UploadResponse.GistURL, githubUserId)
 						c.JSON(200, gin.H{
 							"isFileUploaded": UploadResponse.FileUpload,

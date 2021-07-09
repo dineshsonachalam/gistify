@@ -117,7 +117,7 @@ class UploadGist extends React.Component {
 
 // https://stackoverflow.com/a/50225424
 const mapStateToProps = (state) => {
-  return state.anyJsonReducer;
+  return state.gistifyReducer;
 }
 
 const mapDispatchToProps = (dispatch) => {

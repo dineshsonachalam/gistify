@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Values.gistifyFrontend.appName }}
+  namespace: {{ .Values.namespace }}
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: {{ .Values.gistifyFrontend.ingressRoute }}
+    kind: Rule
+    services:
+    - name: {{ .Values.gistifyFrontend.appName }}
+      port: {{ .Values.gistifyFrontend.containerPort }}   
