@@ -12,7 +12,7 @@ gistifyBackend:
     image: dineshsonachalam/gistify-backend:latest
     containerPort: 8003
     appName: gistify-api
-    ingressRoute: (Host(`api-gistify.dineshsonachalam.com`))
+    ingressRoute: (Host(`api--gistify.dineshsonachalam.com`))
 
 gistifyBackendSecrets:
     appName: gistify-secrets
