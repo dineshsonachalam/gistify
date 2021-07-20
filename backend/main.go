@@ -15,7 +15,7 @@ import (
 )
 
 // getEnv return environmental variables
-func getEnv() (string, string, []byte, string, string, string, string) {
+func GetEnv() (string, string, []byte, string, string, string, string) {
 	ENV := utils.GetEnv()
 	GITHUB_CLIENT_ID := os.Getenv(fmt.Sprintf("GISTIFY_%s_GITHUB_CLIENT_ID", ENV))
 	GITHUB_CLIENT_SECRET := os.Getenv(fmt.Sprintf("GISTIFY_%s_GITHUB_CLIENT_SECRET", ENV))
@@ -32,7 +32,7 @@ func getEnv() (string, string, []byte, string, string, string, string) {
 	return GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, JWT_SECRET_KEY, GIST_API_TOKEN, GISTIFY_APP_URL, DATABASE_URL, COOKIE_DOMAIN
 }
 
-func githubOauthRedirect(c *gin.Context, GITHUB_CLIENT_ID string, GITHUB_CLIENT_SECRET string,
+func GithubOauthRedirect(c *gin.Context, GITHUB_CLIENT_ID string, GITHUB_CLIENT_SECRET string,
 	JWT_SECRET_KEY []byte, DATABASE_URL string, COOKIE_DOMAIN string, GISTIFY_APP_URL string) {
 	requestToken := c.Request.FormValue("code")
 	userDetails := auth.GithubUserDetails(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, requestToken)
@@ -51,7 +51,7 @@ func githubOauthRedirect(c *gin.Context, GITHUB_CLIENT_ID string, GITHUB_CLIENT_
 	c.Redirect(301, GISTIFY_APP_URL+userInfo["username"])
 }
 
-func createNewGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string,
+func CreateNewGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string,
 	GISTIFY_APP_URL string, DATABASE_URL string) {
 	const BEARER_SCHEMA = "Bearer"
 	authHeader := c.GetHeader("Authorization")
@@ -128,7 +128,7 @@ func createNewGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string,
 	}
 }
 
-func deleteGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string, DATABASE_URL string) {
+func DeleteGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string, DATABASE_URL string) {
 	const BEARER_SCHEMA = "Bearer"
 	authHeader := c.GetHeader("Authorization")
 	tokenString := authHeader[len(BEARER_SCHEMA)+1:]
@@ -169,7 +169,7 @@ func deleteGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string, DA
 	}
 }
 
-func getAllGists(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
+func GetAllGists(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
 	const BEARER_SCHEMA = "Bearer"
 	authHeader := c.GetHeader("Authorization")
 	tokenString := authHeader[len(BEARER_SCHEMA)+1:]
@@ -196,7 +196,7 @@ func getAllGists(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
 	}
 }
 
-func getGist(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
+func GetGist(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
 	gistID := c.Param("gistID")
 	const BEARER_SCHEMA = "Bearer"
 	authHeader := c.GetHeader("Authorization")
@@ -225,35 +225,35 @@ func getGist(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
 }
 
 func main() {
-	GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, JWT_SECRET_KEY, GIST_API_TOKEN, GISTIFY_APP_URL, DATABASE_URL, COOKIE_DOMAIN := getEnv()
+	GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, JWT_SECRET_KEY, GIST_API_TOKEN, GISTIFY_APP_URL, DATABASE_URL, COOKIE_DOMAIN := GetEnv()
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
 	if (len(GITHUB_CLIENT_ID) > 0) && (len(GITHUB_CLIENT_SECRET) > 0) {
 		// Github Oauth redirect
 		r.GET("/oauth/redirect", func(c *gin.Context) {
-			githubOauthRedirect(c, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET,
+			GithubOauthRedirect(c, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET,
 				JWT_SECRET_KEY, DATABASE_URL, COOKIE_DOMAIN,
 				GISTIFY_APP_URL)
 		})
 
 		// Create a new gist
 		r.POST("/gists", func(c *gin.Context) {
-			createNewGist(c, JWT_SECRET_KEY, GIST_API_TOKEN, GISTIFY_APP_URL, DATABASE_URL)
+			CreateNewGist(c, JWT_SECRET_KEY, GIST_API_TOKEN, GISTIFY_APP_URL, DATABASE_URL)
 		})
 
 		// Delete a gist
 		r.DELETE("/gists/:gistID", func(c *gin.Context) {
-			deleteGist(c, JWT_SECRET_KEY, GIST_API_TOKEN, DATABASE_URL)
+			DeleteGist(c, JWT_SECRET_KEY, GIST_API_TOKEN, DATABASE_URL)
 		})
 
 		// Get all gists created by user
 		r.GET("/gists", func(c *gin.Context) {
-			getAllGists(c, JWT_SECRET_KEY, DATABASE_URL)
+			GetAllGists(c, JWT_SECRET_KEY, DATABASE_URL)
 		})
 
 		// Get a gist by GIST id
 		r.GET("/gists/:gistID", func(c *gin.Context) {
-			getGist(c, JWT_SECRET_KEY, DATABASE_URL)
+			GetGist(c, JWT_SECRET_KEY, DATABASE_URL)
 		})
 		r.Run(":8003")
 	} else {
