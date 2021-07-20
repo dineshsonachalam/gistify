@@ -1,9 +1,8 @@
-import { Upload, Button, message } from "antd";
+import { Upload, Button, message, PageHeader } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { addGist } from "./../../redux/actions";
 import { connect } from "react-redux";
 import React from "react";
-import { PageHeader} from "antd";
 import reqwest from "reqwest";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
@@ -46,7 +45,7 @@ class UploadGist extends React.Component {
         headers.append("Authorization", `Bearer ${jwtToken}`);
         let requestOptions = {
             method: "GET",
-            headers: headers,
+            headers,
             redirect: "follow"
         }; 
         fetch(url, requestOptions)
@@ -110,7 +109,7 @@ class UploadGist extends React.Component {
         </Button>
       </PageHeader>
     );
-  };
+  }
 }
 
 // https://stackoverflow.com/a/50225424

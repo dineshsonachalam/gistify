@@ -29,7 +29,7 @@ const gistifyReducer = (state=initialState, actions) => {
         default:
             return {...state};
     }
-}
+};
 
 export default gistifyReducer;
 

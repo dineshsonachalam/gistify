@@ -19,7 +19,7 @@ class GistTable extends React.Component {
         headers.append("Authorization", `Bearer ${jwtToken}`) 
         let requestOptions = {
             method: "GET",
-            headers: headers,
+            headers,
             redirect: "follow"
         };
         let gistData = await this.getData(url, requestOptions)
@@ -34,7 +34,7 @@ class GistTable extends React.Component {
         headers.append("Authorization", `Bearer ${jwtToken}`) 
         let requestOptions = {
             method: "DELETE",
-            headers: headers,
+            headers,
             redirect: "follow"
         };
         fetch(url, requestOptions)

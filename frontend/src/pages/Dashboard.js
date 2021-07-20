@@ -18,9 +18,9 @@ class Dashboard extends React.Component {
       return(<Redirect to="/" />);
     }else{
       let decodedJwtToken = jwt_decode(jwtToken);
-      this.props.updateIsLoggedInStatus(true)
-      this.props.updateUserId(decodedJwtToken.userId)
-      this.props.updateUsername(decodedJwtToken.username)
+      this.props.updateIsLoggedInStatus(true);
+      this.props.updateUserId(decodedJwtToken.userId);
+      this.props.updateUsername(decodedJwtToken.username);
       return (
         <div>
             <NavBar />  
@@ -51,7 +51,7 @@ class Dashboard extends React.Component {
 // https://stackoverflow.com/a/50225424
 const mapStateToProps = (state) => {
   return state.gistifyReducer;
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -59,7 +59,7 @@ const mapDispatchToProps = (dispatch) => {
     updateUserId: (user_id) => dispatch(updateUserId(user_id)),
     updateUsername: (username) => dispatch(updateUsername(username)),
   }
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
 
