@@ -53,20 +53,20 @@ func TOMLToJSON(data []byte) ParserResponse {
 }
 
 func CSVToJSON(data []byte) ParserResponse {
-	bytes_data := bytes.NewReader(data)
+	bytesData := bytes.NewReader(data)
 	// create a new reader
-	r := csv.NewReader(bytes_data)
+	r := csv.NewReader(bytesData)
 	records, err := r.ReadAll()
 	if err != nil {
 		return ParserResponse{}
 	} else {
 		parsedData := make([]map[string]interface{}, 0, 0)
-		header_name := records[0]
-		for row_counter, row := range records {
-			if row_counter != 0 {
+		headerName := records[0]
+		for rowCounter, row := range records {
+			if rowCounter != 0 {
 				var singleMap = make(map[string]interface{})
-				for col_counter, col := range row {
-					singleMap[header_name[col_counter]] = col
+				for colCounter, col := range row {
+					singleMap[headerName[colCounter]] = col
 				}
 				if len(singleMap) > 0 {
 
@@ -95,26 +95,26 @@ func ExcelToJSON(data []byte) ParserResponse {
 		return ParserResponse{}
 	} else {
 		parsedData := make([]map[string]interface{}, 0, 0)
-		header_name := list.New()
+		headerName := list.New()
 		// sheet
 		for _, sheet := range xlFile.Sheets {
 			// rows
-			for row_counter, row := range sheet.Rows {
+			for rowCounter, row := range sheet.Rows {
 				// column
-				header_iterator := header_name.Front()
+				headerIterator := headerName.Front()
 				var singleMap = make(map[string]interface{})
 
 				for _, cell := range row.Cells {
-					if row_counter == 0 {
+					if rowCounter == 0 {
 						text := cell.String()
-						header_name.PushBack(text)
+						headerName.PushBack(text)
 					} else {
 						text := cell.String()
-						singleMap[header_iterator.Value.(string)] = text
-						header_iterator = header_iterator.Next()
+						singleMap[headerIterator.Value.(string)] = text
+						headerIterator = headerIterator.Next()
 					}
 				}
-				if row_counter != 0 && len(singleMap) > 0 {
+				if rowCounter != 0 && len(singleMap) > 0 {
 
 					parsedData = append(parsedData, singleMap)
 				}

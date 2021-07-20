@@ -53,7 +53,7 @@ class GistTable extends React.Component {
             },
             {
               title: "Generated from",
-              dataIndex: "generated_from",
+              dataIndex: "generatedFrom",
             },
             {
               title: "URL",
@@ -64,7 +64,7 @@ class GistTable extends React.Component {
             },
             {
               title: "Created at",
-              dataIndex: "created_at",
+              dataIndex: "createdAt",
             },
             {
               title: "Operation",

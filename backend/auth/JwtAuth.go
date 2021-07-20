@@ -7,6 +7,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+// JwtPayload
 type JwtPayload struct {
 	Id       string `json:"id"`
 	Username string `json:"username"`

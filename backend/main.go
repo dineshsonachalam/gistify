@@ -68,8 +68,8 @@ func createNewGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string,
 		if err != nil {
 			c.JSON(200, gin.H{
 				"isFileUploaded": false,
-				"gist_url":       "",
-				"gist_id":        "",
+				"gistURL":        "",
+				"gistID":         "",
 				"jwtAccessToken": "",
 				"message":        "Invalid file format",
 			})
@@ -101,16 +101,16 @@ func createNewGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string,
 				models.CreateGist(DATABASE_URL, UploadResponse.GistId, newFilename, fileExtension, UploadResponse.GistURL, githubUserId)
 				c.JSON(200, gin.H{
 					"isFileUploaded": UploadResponse.FileUpload,
-					"gist_url":       UploadResponse.GistURL,
-					"gist_id":        UploadResponse.GistId,
+					"gistURL":        UploadResponse.GistURL,
+					"gistID":         UploadResponse.GistId,
 					"jwtAccessToken": tokenString,
 					"message":        "Conversion and upload was successful",
 				})
 			} else {
 				c.JSON(200, gin.H{
 					"isFileUploaded": false,
-					"gist_url":       "",
-					"gist_id":        "",
+					"gistURL":        "",
+					"gistID":         "",
 					"jwtAccessToken": tokenString,
 					"message":        "Conversion to JSON failed",
 				})
@@ -119,8 +119,8 @@ func createNewGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string,
 	} else {
 		c.JSON(200, gin.H{
 			"isFileUploaded": false,
-			"gist_url":       "",
-			"gist_id":        "",
+			"gistURL":        "",
+			"gistID":         "",
 			"jwtAccessToken": "",
 			"message":        "Invalid JWT access token",
 		})
@@ -140,15 +140,15 @@ func deleteGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string, DA
 		if tokenExpiry {
 			tokenString = auth.CreateJwtAccessToken(userInfo, JWT_SECRET_KEY)
 		}
-		gist_id := c.Param("gist_id")
-		gist_url := fmt.Sprintf("https://api.github.com/gists/%v", gist_id)
+		gistID := c.Param("gistID")
+		gistURL := fmt.Sprintf("https://api.github.com/gists/%v", gistID)
 		payload := strings.NewReader(`{}`)
 		headers := map[string]string{
 			"Authorization": fmt.Sprintf("Bearer %s", GIST_API_TOKEN),
 			"Content-Type":  "application/json",
 		}
-		GistDeleteResponse := utils.DeleteRequest(gist_url, payload, headers)
-		models.DeleteGist(DATABASE_URL, gist_id, githubUserId)
+		GistDeleteResponse := utils.DeleteRequest(gistURL, payload, headers)
+		models.DeleteGist(DATABASE_URL, gistID, githubUserId)
 		if GistDeleteResponse.Status {
 			c.JSON(200, gin.H{
 				"isDeleted":      true,
@@ -196,7 +196,7 @@ func getAllGists(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
 }
 
 func getGist(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
-	gist_id := c.Param("gist_id")
+	gistID := c.Param("gistID")
 	const BEARER_SCHEMA = "Bearer"
 	authHeader := c.GetHeader("Authorization")
 	tokenString := authHeader[len(BEARER_SCHEMA)+1:]
@@ -209,7 +209,7 @@ func getGist(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
 		if tokenExpiry {
 			tokenString = auth.CreateJwtAccessToken(userInfo, JWT_SECRET_KEY)
 		}
-		gistData := models.GetGist(DATABASE_URL, gist_id)
+		gistData := models.GetGist(DATABASE_URL, gistID)
 		c.JSON(200, gin.H{
 			"isDeleted":      true,
 			"gistData":       gistData,
@@ -241,7 +241,7 @@ func main() {
 		})
 
 		// Delete a gist
-		r.DELETE("/gists/:gist_id", func(c *gin.Context) {
+		r.DELETE("/gists/:gistID", func(c *gin.Context) {
 			deleteGist(c, JWT_SECRET_KEY, GIST_API_TOKEN, DATABASE_URL)
 		})
 
@@ -251,7 +251,7 @@ func main() {
 		})
 
 		// Get a gist by GIST id
-		r.GET("/gists/:gist_id", func(c *gin.Context) {
+		r.GET("/gists/:gistID", func(c *gin.Context) {
 			getGist(c, JWT_SECRET_KEY, DATABASE_URL)
 		})
 		r.Run(":8003")
