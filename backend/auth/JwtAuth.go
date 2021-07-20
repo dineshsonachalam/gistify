@@ -7,6 +7,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+// JwtPayload represents JWT Payload which is used, to create and validate JWT
 type JwtPayload struct {
 	Id       string `json:"id"`
 	Username string `json:"username"`

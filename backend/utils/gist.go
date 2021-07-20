@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// UploadResponse represents the response of the Github Gist upload
 type UploadResponse struct {
 	FileUpload bool
 	GistId     string

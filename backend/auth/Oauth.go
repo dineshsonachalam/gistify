@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// GithubUserInfo represent authenticated Github user information
 type GithubUserInfo struct {
 	Id       string `json:"id"`
 	Username string `json:"username"`

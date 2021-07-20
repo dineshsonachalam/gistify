@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// HttpRequest represents the response of HTTP request
 type HttpRequest struct {
 	Status       bool
 	ResponseBody map[string]interface{}

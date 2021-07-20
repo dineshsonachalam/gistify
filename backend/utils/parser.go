@@ -13,6 +13,7 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
+// ParserResponse represents the Parser JSON response
 type ParserResponse struct {
 	FileParsed bool
 	JsonString string
