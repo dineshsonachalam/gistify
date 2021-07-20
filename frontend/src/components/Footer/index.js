@@ -16,11 +16,11 @@ class PageFooter extends React.Component {
 // https://stackoverflow.com/a/50225424
 const mapStateToProps = (state) => {
   return state.gistifyReducer;
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
-}
+  return {};
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageFooter);
 

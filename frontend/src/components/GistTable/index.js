@@ -41,8 +41,7 @@ class GistTable extends React.Component {
             .then(response => response.json())
             .then(result => console.log("Key: ,Result: ",key, result))
             .catch(error => console.log("error", error));
-        
-        this.props.updateGists(dataSource.filter((item) => item.key !== key))
+        this.props.updateGists(dataSource.filter((item) => item.key !== key));
     };
 
     render(){
@@ -94,13 +93,13 @@ class GistTable extends React.Component {
 // https://stackoverflow.com/a/50225424
 const mapStateToProps = (state) => {
   return state.gistifyReducer;
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
     updateGists: (gists) => dispatch(updateGists(gists)),
-  }
-}
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(GistTable);
 

@@ -11,25 +11,23 @@ const initialState = {
 const gistifyReducer = (state=initialState, actions) => {
     switch(actions.type) {
         case UPDATE_IS_LOGGED_IN_STATUS:
-            return {...state, isLoggedInStatus: actions.payload.isLoggedInStatus}
+            return {...state, isLoggedInStatus: actions.payload.isLoggedInStatus};
         case UPDATE_USER_ID:
-            return {...state, userId: actions.payload.userId}
+            return {...state, userId: actions.payload.userId};
         case UPDATE_USERNAME:
-            return {...state, username: actions.payload.username}
+            return {...state, username: actions.payload.username};
         case UPDATE_GISTS:
-            return {...state, gists: [...actions.payload.gists]}
+            return {...state, gists: [...actions.payload.gists]};
         case ADD_GIST:
-            let gist = actions.payload.gist
+            let gist = actions.payload.gist;
             if (Object.keys(gist).length){
-                let gists = state.gists
-                return {...state, gists: [gist, ...gists]}
+                let gists = state.gists;
+                return {...state, gists: [gist, ...gists]};
             }else{
-                return {...state, gists: [...state.gists]}
+                return {...state, gists: [...state.gists]};
             }
-            
-
         default:
-            return {...state}
+            return {...state};
     }
 }
 

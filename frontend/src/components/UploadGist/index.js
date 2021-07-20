@@ -27,7 +27,7 @@ class UploadGist extends React.Component {
     });
 
     // You can use any AJAX library you like
-    let gistUrl = `${process.env.REACT_APP_API_ENDPOINT}/gists`
+    let gistUrl = `${process.env.REACT_APP_API_ENDPOINT}/gists`;
     let jwtToken = cookies.get("token", {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});    
     cookies.set("token", jwtToken, {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});    
     
@@ -40,10 +40,10 @@ class UploadGist extends React.Component {
       processData: false,
       data: formData,
       success: (resp) => {
-        let gist_id = resp.gist_id
-        let url = `${process.env.REACT_APP_API_ENDPOINT}/gists/${gist_id}`
+        let gist_id = resp.gist_id;
+        let url = `${process.env.REACT_APP_API_ENDPOINT}/gists/${gist_id}`;
         let headers = new Headers();
-        headers.append("Authorization", `Bearer ${jwtToken}`) 
+        headers.append("Authorization", `Bearer ${jwtToken}`);
         let requestOptions = {
             method: "GET",
             headers: headers,
@@ -87,8 +87,6 @@ class UploadGist extends React.Component {
             fileList: [...state.fileList, file],
           }));
         }
-
-
         return false;
       },
       fileList,
@@ -112,19 +110,19 @@ class UploadGist extends React.Component {
         </Button>
       </PageHeader>
     );
-  }
+  };
 }
 
 // https://stackoverflow.com/a/50225424
 const mapStateToProps = (state) => {
   return state.gistifyReducer;
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
     addGist: (gist) => dispatch(addGist(gist)),
-  }
-}
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(UploadGist);
 

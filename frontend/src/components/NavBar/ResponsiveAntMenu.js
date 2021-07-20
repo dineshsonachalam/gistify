@@ -23,14 +23,14 @@ const ResponsiveAntMenu = (props) => {
         return () => window.removeEventListener("resize", throttledSetViewPortWidth);
     }, []);
 
-    const MenuMarkupConfig = {
+    const menuMarkupConfig = {
         theme: !theme ? "dark" : typeof theme === "function" ? theme(isMobile()) : theme,
         mode: !mode ? "horizontal" : typeof mode === "function" ? mode(isMobile()) : mode,
         selectedKeys: [`${activeLinkKey}`],
         className,
     };
 
-    const menuToRender = React.cloneElement(MenuMarkup(onLinkClick()), MenuMarkupConfig);
+    const menuToRender = React.cloneElement(MenuMarkup(onLinkClick()), menuMarkupConfig);
 
     return isMobile() ?
         <Popover
