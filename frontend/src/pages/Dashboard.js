@@ -58,7 +58,7 @@ const mapDispatchToProps = (dispatch) => {
     updateIsLoggedInStatus: (isLoggedInStatus) => dispatch(updateIsLoggedInStatus(isLoggedInStatus)),
     updateUserId: (user_id) => dispatch(updateUserId(user_id)),
     updateUsername: (username) => dispatch(updateUsername(username)),
-  }
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
