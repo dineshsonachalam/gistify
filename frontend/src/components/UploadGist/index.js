@@ -40,8 +40,8 @@ class UploadGist extends React.Component {
       processData: false,
       data: formData,
       success: (resp) => {
-        let gist_id = resp.gist_id;
-        let url = `${process.env.REACT_APP_API_ENDPOINT}/gists/${gist_id}`;
+        let gistID = resp.gistID;
+        let url = `${process.env.REACT_APP_API_ENDPOINT}/gists/${gistID}`;
         let headers = new Headers();
         headers.append("Authorization", `Bearer ${jwtToken}`);
         let requestOptions = {

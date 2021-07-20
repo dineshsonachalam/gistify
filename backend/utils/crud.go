@@ -18,8 +18,8 @@ func GetRequest(url string, payload *strings.Reader, headers map[string]string) 
 	if err != nil {
 		return HttpRequest{}
 	} else {
-		for header_key, header_value := range headers {
-			req.Header.Add(header_key, header_value)
+		for headerKey, headerValue := range headers {
+			req.Header.Add(headerKey, headerValue)
 		}
 		response, err := client.Do(req)
 		if err != nil {
@@ -47,8 +47,8 @@ func PostRequest(url string, payload *strings.Reader, headers map[string]string)
 	if err != nil {
 		return HttpRequest{}
 	} else {
-		for header_key, header_value := range headers {
-			req.Header.Add(header_key, header_value)
+		for headerKey, headerValue := range headers {
+			req.Header.Add(headerKey, headerValue)
 		}
 		response, err := client.Do(req)
 		if err != nil {
@@ -75,8 +75,8 @@ func DeleteRequest(url string, payload *strings.Reader, headers map[string]strin
 	if err != nil {
 		return HttpRequest{}
 	} else {
-		for header_key, header_value := range headers {
-			req.Header.Add(header_key, header_value)
+		for headerKey, headerValue := range headers {
+			req.Header.Add(headerKey, headerValue)
 		}
 		response, err := client.Do(req)
 		if err != nil {
