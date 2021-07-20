@@ -1,11 +1,11 @@
-import { Upload, Button, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Upload, Button, message } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import { addGist } from "./../../redux/actions";
-import { connect } from 'react-redux';
-import React from 'react';
-import { PageHeader} from 'antd';
-import reqwest from 'reqwest';
-import Cookies from 'universal-cookie';
+import { connect } from "react-redux";
+import React from "react";
+import { PageHeader} from "antd";
+import reqwest from "reqwest";
+import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 
@@ -28,14 +28,14 @@ class UploadGist extends React.Component {
 
     // You can use any AJAX library you like
     let gistUrl = `${process.env.REACT_APP_API_ENDPOINT}/gists`
-    let jwtToken = cookies.get('token', {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});    
-    cookies.set('token', jwtToken, {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});    
+    let jwtToken = cookies.get("token", {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});    
+    cookies.set("token", jwtToken, {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});    
     
     reqwest({
       url: gistUrl,
-      method: 'post',
+      method: "post",
       headers: {
-        'Authorization': `Bearer ${jwtToken}`
+        "Authorization": `Bearer ${jwtToken}`
       },      
       processData: false,
       data: formData,
@@ -45,14 +45,14 @@ class UploadGist extends React.Component {
         let headers = new Headers();
         headers.append("Authorization", `Bearer ${jwtToken}`) 
         let requestOptions = {
-            method: 'GET',
+            method: "GET",
             headers: headers,
-            redirect: 'follow'
+            redirect: "follow"
         }; 
         fetch(url, requestOptions)
           .then(response => response.json())
           .then(result => this.props.addGist(result.gistData))
-          .catch(error => console.log('error', error));
+          .catch(error => console.log("error", error));
         this.setState({
           fileList: [],
           uploading: false,
@@ -63,7 +63,7 @@ class UploadGist extends React.Component {
         this.setState({
           uploading: false,
         });
-        message.error('Conversion failed');
+        message.error("Conversion failed");
       },
     });
   };
@@ -108,7 +108,7 @@ class UploadGist extends React.Component {
           loading={uploading}
           style={{ marginTop: 16 }}
         >
-          {uploading ? 'Uploading' : 'Start conversion'}
+          {uploading ? "Uploading" : "Start conversion"}
         </Button>
       </PageHeader>
     );

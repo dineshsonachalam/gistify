@@ -1,6 +1,6 @@
 // Step 2: Create Actions for your Action Types
 
-import {UPDATE_IS_LOGGED_IN_STATUS, UPDATE_USER_ID, UPDATE_USERNAME, UPDATE_GISTS, ADD_GIST} from './actionTypes';
+import {UPDATE_IS_LOGGED_IN_STATUS, UPDATE_USER_ID, UPDATE_USERNAME, UPDATE_GISTS, ADD_GIST} from "./actionTypes";
 
 export const updateIsLoggedInStatus = (isLoggedInStatus) => {
   return {

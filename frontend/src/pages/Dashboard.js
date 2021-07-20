@@ -1,13 +1,13 @@
 import { Redirect } from "react-router"
-import React from 'react';
+import React from "react";
 import NavBar from "../components/NavBar"
 import UploadGist from "../components/UploadGist"
 import PageFooter from "../components/Footer"
 import GistTable from "../components/GistTable"
-import { Layout} from 'antd';
-import Cookies from 'universal-cookie';
+import { Layout} from "antd";
+import Cookies from "universal-cookie";
 import { updateIsLoggedInStatus, updateUserId, updateUsername } from "./../redux/actions";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import jwt_decode from "jwt-decode";
 const cookies = new Cookies();
 const { Content } = Layout;
@@ -42,7 +42,7 @@ class Dashboard extends React.Component {
   render(){
     return (
         <div>
-          {this.DashboardPage(cookies.get('token', {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`}))}
+          {this.DashboardPage(cookies.get("token", {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`}))}
         </div>
     );
   }

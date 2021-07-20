@@ -1,12 +1,12 @@
-import Cookies from 'universal-cookie';
+import Cookies from "universal-cookie";
 import jwt_decode from "jwt-decode";
 import { Redirect } from "react-router"
-import React from 'react';
+import React from "react";
 import NavBar from "../components/NavBar"
 import UploadGist from "../components/UploadGist"
 import PageFooter from "../components/Footer"
-import { connect } from 'react-redux';
-import { Layout} from 'antd';
+import { connect } from "react-redux";
+import { Layout} from "antd";
 const { Content } = Layout;
 
 const cookies = new Cookies();
@@ -34,7 +34,7 @@ class Login extends React.Component {
   render(){
     return (
       <div>
-        {this.LoginPage(cookies.get('token', {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`}))}
+        {this.LoginPage(cookies.get("token", {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`}))}
       </div>
     );
   }

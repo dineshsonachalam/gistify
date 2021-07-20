@@ -1,24 +1,24 @@
-import React from 'react';
-import ResponsiveAntMenu from './ResponsiveAntMenu'
-import { Menu } from 'antd';
+import React from "react";
+import ResponsiveAntMenu from "./ResponsiveAntMenu"
+import { Menu } from "antd";
 import { 
     GithubOutlined,
-} from '@ant-design/icons';
-import { connect } from 'react-redux';
-import Cookies from 'universal-cookie';
+} from "@ant-design/icons";
+import { connect } from "react-redux";
+import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 class NavBar extends React.Component {
   LogoutClickEvent = (e) => {
     e.preventDefault();
-    cookies.remove('token', {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});
+    cookies.remove("token", {path: "/", domain: `${process.env.REACT_APP_COOKIE_DOMAIN}`});
     window.location = "/";
   };
 
   AuthButton() {
     if(this.props.isLoggedInStatus){
       return (
-        <Menu.Item style={{float: 'right'}} key='/logout' className={'menu-home'}>
+        <Menu.Item style={{float: "right"}} key="/logout" className={"menu-home"}>
           {// eslint-disable-next-line
           }<a href="#" onClick={this.LogoutClickEvent}>Logout</a>
         </Menu.Item>   
@@ -28,7 +28,7 @@ class NavBar extends React.Component {
       let GithubClientURL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_API_ENDPOINT}/oauth/redirect`;
       /* eslint-disable */
       return (
-        <Menu.Item style={{float: 'right'}} key='/oauth/authorize' className={'menu-home'}>
+        <Menu.Item style={{float: "right"}} key="/oauth/authorize" className={"menu-home"}>
           <a href={GithubClientURL}>Login with github  <GithubOutlined /></a>
         </Menu.Item>
       );
@@ -38,12 +38,12 @@ class NavBar extends React.Component {
     return (
                 <ResponsiveAntMenu
                     mobileMenuContent={isMenuShown => isMenuShown ? <button>Close</button> : <button>Open</button>}
-                    menuClassName={'responsive-ant-menu'}
+                    menuClassName={"responsive-ant-menu"}
                 >
                     {(onLinkClick) =>          
-                        <Menu theme='dark'>
-                            <Menu.Item key='/' className={'menu-home'}>
-                                <a onClick={onLinkClick} href={'/'}>Gistify</a>
+                        <Menu theme="dark">
+                            <Menu.Item key="/" className={"menu-home"}>
+                                <a onClick={onLinkClick} href={"/"}>Gistify</a>
                             </Menu.Item>
                             {this.AuthButton()}
                         </Menu>                    
