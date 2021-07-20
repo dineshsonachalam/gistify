@@ -2,10 +2,8 @@ name: Docker
 
 on:
   push:
-    branches:
-      - master
-    tags:
-      - latest
+    branches:    
+      - '**'  # matches every branch
   
 jobs:
   upload-docker-image:
