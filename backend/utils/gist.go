@@ -37,7 +37,6 @@ func UploadJsonToGist(GIST_API_TOKEN string, fileName string, newFilename string
 		gistID := fmt.Sprintf("%v", uploadResponse.ResponseBody["id"])
 		gistURL := fmt.Sprintf("%v", uploadResponse.ResponseBody["html_url"])
 		return UploadResponse{isFileUploaded, gistID, gistURL}
-	} else {
-		return UploadResponse{}
 	}
+	return UploadResponse{}
 }

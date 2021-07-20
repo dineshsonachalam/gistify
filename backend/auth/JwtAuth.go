@@ -47,37 +47,32 @@ func ValidateJwtAccessToken(jwtAccessToken string, jwtSecretKey []byte) bool {
 	})
 	if err != nil || !jwtToken.Valid {
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
 func IsJwtAccessTokenExpiryInFiveMin(jwtAccessToken string) (bool, string, string) {
 	token, _, err := new(jwt.Parser).ParseUnverified(jwtAccessToken, jwt.MapClaims{})
 	if err != nil {
 		return false, "", ""
-	} else {
-		jwtPayload, ok := token.Claims.(jwt.MapClaims)
-		if !ok {
-			return false, "", ""
-		} else {
-			var tokenExpirationTime time.Time
-
-			id := jwtPayload["id"].(string)
-			username := jwtPayload["username"].(string)
-			switch exp := jwtPayload["exp"].(type) {
-			case float64:
-				tokenExpirationTime = time.Unix(int64(exp), 0)
-			case json.Number:
-				v, _ := exp.Int64()
-				tokenExpirationTime = time.Unix(v, 0)
-			}
-			currentTime := time.Now().Add(5 * time.Minute)
-			if tokenExpirationTime.Before(currentTime) {
-				return true, id, username
-			} else {
-				return false, id, username
-			}
-		}
 	}
+	jwtPayload, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return false, "", ""
+	}
+	var tokenExpirationTime time.Time
+	id := jwtPayload["id"].(string)
+	username := jwtPayload["username"].(string)
+	switch exp := jwtPayload["exp"].(type) {
+	case float64:
+		tokenExpirationTime = time.Unix(int64(exp), 0)
+	case json.Number:
+		v, _ := exp.Int64()
+		tokenExpirationTime = time.Unix(v, 0)
+	}
+	currentTime := time.Now().Add(5 * time.Minute)
+	if tokenExpirationTime.Before(currentTime) {
+		return true, id, username
+	}
+	return false, id, username
 }

@@ -37,11 +37,7 @@ func GithubUserDetails(clientId string, clientSecret string, requestToken string
 			username := githubUsername
 			email := githubUserEmail
 			return GithubUserInfo{id, username, email}
-		} else {
-			return GithubUserInfo{}
 		}
-	} else {
-		return GithubUserInfo{}
 	}
-
+	return GithubUserInfo{}
 }
