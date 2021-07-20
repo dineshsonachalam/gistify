@@ -12,6 +12,7 @@ type UploadResponse struct {
 	GistURL    string
 }
 
+// UploadJsonToGist return status of uploading JSON to gist
 func UploadJsonToGist(GIST_API_TOKEN string, fileName string, newFilename string, jsonString string, author string, appUrl string) UploadResponse {
 	gistUrl := "https://api.github.com/gists"
 	headers := map[string]string{

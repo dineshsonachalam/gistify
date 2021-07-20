@@ -18,6 +18,7 @@ type ParserResponse struct {
 	JsonString string
 }
 
+// YAMLToJSON convert YAML to JSON return map
 func YAMLToJSON(data []byte) ParserResponse {
 	parsedData, _ := yaml.YAMLToJSON(data)
 	jsonMap := make(map[string]interface{})
@@ -32,6 +33,7 @@ func YAMLToJSON(data []byte) ParserResponse {
 	return ParserResponse{true, jsonString}
 }
 
+// TOMLToJSON convert TOML to JSON return map
 func TOMLToJSON(data []byte) ParserResponse {
 	readerData := strings.NewReader(string(data))
 	tree, err := toml.LoadReader(readerData)
@@ -47,6 +49,7 @@ func TOMLToJSON(data []byte) ParserResponse {
 	return ParserResponse{true, jsonString}
 }
 
+// CSVToJSON convert CSV to JSON return map
 func CSVToJSON(data []byte) ParserResponse {
 	bytesData := bytes.NewReader(data)
 	// create a new reader
@@ -81,6 +84,7 @@ func CSVToJSON(data []byte) ParserResponse {
 	return ParserResponse{}
 }
 
+// ExcelToJSON convert Excel to JSON return map
 func ExcelToJSON(data []byte) ParserResponse {
 	xlFile, err := xlsx.OpenBinary(data)
 	if err != nil {

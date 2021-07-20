@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// getEnv return environmental variables
 func getEnv() (string, string, []byte, string, string, string, string) {
 	ENV := utils.GetEnv()
 	GITHUB_CLIENT_ID := os.Getenv(fmt.Sprintf("GISTIFY_%s_GITHUB_CLIENT_ID", ENV))

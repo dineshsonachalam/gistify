@@ -7,6 +7,7 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
+// CreateUserTable return status of user table creation
 func CreateUserTable(databaseUrl string) bool {
 	conn, err := pgx.Connect(context.Background(), databaseUrl)
 	if err != nil {
@@ -17,6 +18,7 @@ func CreateUserTable(databaseUrl string) bool {
 	return err == nil
 }
 
+// CreateGistTable return status of gist table creation
 func CreateGistTable(databaseUrl string) bool {
 	conn, err := pgx.Connect(context.Background(), databaseUrl)
 	if err != nil {
@@ -27,6 +29,7 @@ func CreateGistTable(databaseUrl string) bool {
 	return err == nil
 }
 
+// CreateUser return status of user creation
 func CreateUser(databaseUrl string, id string, username string, emailID string) bool {
 	conn, err := pgx.Connect(context.Background(), databaseUrl)
 	if err != nil {
@@ -37,6 +40,7 @@ func CreateUser(databaseUrl string, id string, username string, emailID string) 
 	return err == nil
 }
 
+// GetUser return status of user id availability in the database and the username
 func GetUser(databaseUrl string, id string) (bool, string) {
 	conn, err := pgx.Connect(context.Background(), databaseUrl)
 	var githubUserID string
@@ -52,6 +56,7 @@ func GetUser(databaseUrl string, id string) (bool, string) {
 	return true, username
 }
 
+// CreateGist return status of gist creation
 func CreateGist(databaseUrl string, id string, filename string, generatedFrom string, url string, githubUserID string) bool {
 	conn, err := pgx.Connect(context.Background(), databaseUrl)
 	if err != nil {
@@ -62,6 +67,7 @@ func CreateGist(databaseUrl string, id string, filename string, generatedFrom st
 	return err == nil
 }
 
+// DeleteGist return status of gist deletion
 func DeleteGist(databaseUrl string, gistID string, githubUserID string) bool {
 	conn, err := pgx.Connect(context.Background(), databaseUrl)
 	if err != nil {
@@ -72,6 +78,7 @@ func DeleteGist(databaseUrl string, gistID string, githubUserID string) bool {
 	return err == nil
 }
 
+// GetAllGist return all gist created by a user
 func GetAllGist(databaseUrl string, githubUserID string) []map[string]interface{} {
 	conn, err := pgx.Connect(context.Background(), databaseUrl)
 	gistData := make([]map[string]interface{}, 0)
@@ -105,6 +112,7 @@ func GetAllGist(databaseUrl string, githubUserID string) []map[string]interface{
 	return gistData
 }
 
+// GetGist return a gist created by a user
 func GetGist(databaseUrl string, gistID string) map[string]interface{} {
 	conn, err := pgx.Connect(context.Background(), databaseUrl)
 	gistData := make(map[string]interface{})

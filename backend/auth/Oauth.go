@@ -13,6 +13,7 @@ type GithubUserInfo struct {
 	Email    string ` json:"email"`
 }
 
+// GithubUserDetails return authenticated Github user information
 func GithubUserDetails(clientId string, clientSecret string, requestToken string) GithubUserInfo {
 	accessTokenURL := fmt.Sprintf("https://github.com/login/oauth/access_token?client_id=%s&client_secret=%s&code=%s", clientId, clientSecret, requestToken)
 	payload := strings.NewReader(`{}`)
@@ -20,7 +21,6 @@ func GithubUserDetails(clientId string, clientSecret string, requestToken string
 		"accept": "application/json",
 	}
 	AccessTokenResponse := utils.PostRequest(accessTokenURL, payload, headers)
-
 	if AccessTokenResponse.Status {
 		accessToken := AccessTokenResponse.ResponseBody["access_token"]
 		githubUserDetailsUrl := "https://api.github.com/user"

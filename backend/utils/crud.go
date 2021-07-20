@@ -12,6 +12,7 @@ type HttpRequest struct {
 	ResponseBody map[string]interface{}
 }
 
+// GetRequest return HTTP GET JSON response
 func GetRequest(url string, payload *strings.Reader, headers map[string]string) HttpRequest {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, payload)
@@ -39,6 +40,7 @@ func GetRequest(url string, payload *strings.Reader, headers map[string]string) 
 	return HttpRequest{}
 }
 
+// PostRequest return HTTP POST JSON response
 func PostRequest(url string, payload *strings.Reader, headers map[string]string) HttpRequest {
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", url, payload)
@@ -65,6 +67,7 @@ func PostRequest(url string, payload *strings.Reader, headers map[string]string)
 	return HttpRequest{}
 }
 
+// DeleteRequest return HTTP DELETE JSON response
 func DeleteRequest(url string, payload *strings.Reader, headers map[string]string) HttpRequest {
 	client := &http.Client{}
 	req, err := http.NewRequest("DELETE", url, payload)

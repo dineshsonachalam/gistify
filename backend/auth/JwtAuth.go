@@ -7,13 +7,13 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-// JwtPayload
 type JwtPayload struct {
 	Id       string `json:"id"`
 	Username string `json:"username"`
 	jwt.StandardClaims
 }
 
+// CreateJwtAccessToken return JWT access token
 func CreateJwtAccessToken(payload map[string]string, jwtSecretKey []byte) string {
 	// Step 1: Token expiration time - 15 minutes
 	tokenExpirationTime := time.Now().Add(15 * time.Minute)
@@ -35,6 +35,7 @@ func CreateJwtAccessToken(payload map[string]string, jwtSecretKey []byte) string
 	return jwtAccessToken
 }
 
+// ValidateJwtAccessToken return the JWT access token validation status
 func ValidateJwtAccessToken(jwtAccessToken string, jwtSecretKey []byte) bool {
 	// Step 1: Initialize a new instance of JwtPayload
 	jwtPayload := &JwtPayload{}
@@ -51,6 +52,7 @@ func ValidateJwtAccessToken(jwtAccessToken string, jwtSecretKey []byte) bool {
 	return true
 }
 
+// IsJwtAccessTokenExpiryInFiveMin return the status of JWT access token expiry is within 5 minutes.
 func IsJwtAccessTokenExpiryInFiveMin(jwtAccessToken string) (bool, string, string) {
 	token, _, err := new(jwt.Parser).ParseUnverified(jwtAccessToken, jwt.MapClaims{})
 	if err != nil {
