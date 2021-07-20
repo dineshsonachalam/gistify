@@ -74,10 +74,9 @@ func CSVToJSON(data []byte) ParserResponse {
 		parsedJson, err := json.MarshalIndent(parsedData, "", "  ")
 		if err != nil {
 			return ParserResponse{}
-		} else {
-			jsonString := string(parsedJson)
-			return ParserResponse{true, jsonString}
 		}
+		jsonString := string(parsedJson)
+		return ParserResponse{true, jsonString}
 	}
 	return ParserResponse{}
 }

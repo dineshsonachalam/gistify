@@ -14,11 +14,7 @@ func CreateUserTable(databaseUrl string) bool {
 	}
 	defer conn.Close(context.Background())
 	_, err = conn.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS app_user(id VARCHAR(255) PRIMARY KEY NOT NULL, username VARCHAR(255) NOT NULL, emailID VARCHAR(255) NOT NULL, createdAt TIMESTAMPTZ DEFAULT Now())")
-	if err != nil {
-		return false
-	} else {
-		return true
-	}
+	return err == nil
 }
 
 func CreateGistTable(databaseUrl string) bool {
@@ -28,11 +24,7 @@ func CreateGistTable(databaseUrl string) bool {
 	}
 	defer conn.Close(context.Background())
 	_, err = conn.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS gist(id VARCHAR(255) PRIMARY KEY NOT NULL, filename VARCHAR(255) NOT NULL, generatedFrom VARCHAR(255) NOT NULL, url VARCHAR(255) NOT NULL, githubUserID VARCHAR(255) NOT NULL references app_user(id), createdAt TIMESTAMPTZ DEFAULT Now())")
-	if err != nil {
-		return false
-	} else {
-		return true
-	}
+	return err == nil
 }
 
 func CreateUser(databaseUrl string, id string, username string, emailID string) bool {
@@ -42,11 +34,7 @@ func CreateUser(databaseUrl string, id string, username string, emailID string) 
 	}
 	defer conn.Close(context.Background())
 	_, err = conn.Exec(context.Background(), "INSERT INTO app_user(id, username, emailID) VALUES($1, $2, $3)", id, username, emailID)
-	if err != nil {
-		return false
-	} else {
-		return true
-	}
+	return err == nil
 }
 
 func GetUser(databaseUrl string, id string) (bool, string) {
@@ -72,11 +60,7 @@ func CreateGist(databaseUrl string, id string, filename string, generatedFrom st
 	}
 	defer conn.Close(context.Background())
 	_, err = conn.Exec(context.Background(), "INSERT INTO gist(id, filename, generatedFrom, url, githubUserID) VALUES($1, $2, $3, $4, $5)", id, filename, generatedFrom, url, githubUserID)
-	if err != nil {
-		return false
-	} else {
-		return true
-	}
+	return err == nil
 }
 
 func DeleteGist(databaseUrl string, gistID string, githubUserID string) bool {
@@ -86,11 +70,7 @@ func DeleteGist(databaseUrl string, gistID string, githubUserID string) bool {
 	}
 	defer conn.Close(context.Background())
 	_, err = conn.Exec(context.Background(), "DELETE FROM gist WHERE id=$1 AND githubUserID=$2", gistID, githubUserID)
-	if err != nil {
-		return false
-	} else {
-		return true
-	}
+	return err == nil
 }
 
 func GetAllGist(databaseUrl string, githubUserID string) []map[string]interface{} {
