@@ -23,16 +23,13 @@ func YAMLToJSON(data []byte) ParserResponse {
 	jsonMap := make(map[string]interface{})
 	if err := json.Unmarshal(parsedData, &jsonMap); err != nil {
 		return ParserResponse{}
-	} else {
-		parsedJson, err := json.MarshalIndent(jsonMap, "", "  ")
-		jsonString := string(parsedJson)
-		if err != nil {
-			return ParserResponse{}
-		} else {
-			return ParserResponse{true, jsonString}
-		}
 	}
-
+	parsedJson, err := json.MarshalIndent(jsonMap, "", "  ")
+	jsonString := string(parsedJson)
+	if err != nil {
+		return ParserResponse{}
+	}
+	return ParserResponse{true, jsonString}
 }
 
 func TOMLToJSON(data []byte) ParserResponse {
@@ -40,16 +37,14 @@ func TOMLToJSON(data []byte) ParserResponse {
 	tree, err := toml.LoadReader(readerData)
 	if err != nil {
 		return ParserResponse{}
-	} else {
-		treeMap := tree.ToMap()
-		bytes, err := json.MarshalIndent(treeMap, "", "  ")
-		if err != nil {
-			return ParserResponse{}
-		} else {
-			jsonString := string(bytes[:])
-			return ParserResponse{true, jsonString}
-		}
 	}
+	treeMap := tree.ToMap()
+	bytes, err := json.MarshalIndent(treeMap, "", "  ")
+	if err != nil {
+		return ParserResponse{}
+	}
+	jsonString := string(bytes[:])
+	return ParserResponse{true, jsonString}
 }
 
 func CSVToJSON(data []byte) ParserResponse {
@@ -59,78 +54,73 @@ func CSVToJSON(data []byte) ParserResponse {
 	records, err := r.ReadAll()
 	if err != nil {
 		return ParserResponse{}
-	} else {
-		parsedData := make([]map[string]interface{}, 0, 0)
-		headerName := records[0]
-		for rowCounter, row := range records {
-			if rowCounter != 0 {
-				var singleMap = make(map[string]interface{})
-				for colCounter, col := range row {
-					singleMap[headerName[colCounter]] = col
-				}
-				if len(singleMap) > 0 {
+	}
+	parsedData := make([]map[string]interface{}, 0)
+	headerName := records[0]
+	for rowCounter, row := range records {
+		if rowCounter != 0 {
+			var singleMap = make(map[string]interface{})
+			for colCounter, col := range row {
+				singleMap[headerName[colCounter]] = col
+			}
+			if len(singleMap) > 0 {
 
-					parsedData = append(parsedData, singleMap)
-				}
+				parsedData = append(parsedData, singleMap)
 			}
-		}
-		if len(parsedData) > 0 {
-			fmt.Printf("var2 = %T\n", parsedData)
-			parsedJson, err := json.MarshalIndent(parsedData, "", "  ")
-			if err != nil {
-				return ParserResponse{}
-			} else {
-				jsonString := string(parsedJson)
-				return ParserResponse{true, jsonString}
-			}
-		} else {
-			return ParserResponse{}
 		}
 	}
+	if len(parsedData) > 0 {
+		fmt.Printf("var2 = %T\n", parsedData)
+		parsedJson, err := json.MarshalIndent(parsedData, "", "  ")
+		if err != nil {
+			return ParserResponse{}
+		} else {
+			jsonString := string(parsedJson)
+			return ParserResponse{true, jsonString}
+		}
+	}
+	return ParserResponse{}
 }
 
 func ExcelToJSON(data []byte) ParserResponse {
 	xlFile, err := xlsx.OpenBinary(data)
 	if err != nil {
 		return ParserResponse{}
-	} else {
-		parsedData := make([]map[string]interface{}, 0, 0)
-		headerName := list.New()
-		// sheet
-		for _, sheet := range xlFile.Sheets {
-			// rows
-			for rowCounter, row := range sheet.Rows {
-				// column
-				headerIterator := headerName.Front()
-				var singleMap = make(map[string]interface{})
+	}
+	parsedData := make([]map[string]interface{}, 0)
+	headerName := list.New()
+	// sheet
+	for _, sheet := range xlFile.Sheets {
+		// rows
+		for rowCounter, row := range sheet.Rows {
+			// column
+			headerIterator := headerName.Front()
+			var singleMap = make(map[string]interface{})
 
-				for _, cell := range row.Cells {
-					if rowCounter == 0 {
-						text := cell.String()
-						headerName.PushBack(text)
-					} else {
-						text := cell.String()
-						singleMap[headerIterator.Value.(string)] = text
-						headerIterator = headerIterator.Next()
-					}
+			for _, cell := range row.Cells {
+				if rowCounter == 0 {
+					text := cell.String()
+					headerName.PushBack(text)
+				} else {
+					text := cell.String()
+					singleMap[headerIterator.Value.(string)] = text
+					headerIterator = headerIterator.Next()
 				}
-				if rowCounter != 0 && len(singleMap) > 0 {
-
-					parsedData = append(parsedData, singleMap)
-				}
-
 			}
-		}
-		if len(parsedData) > 0 {
-			parsedJson, err := json.MarshalIndent(parsedData, "", "  ")
-			if err != nil {
-				return ParserResponse{}
-			} else {
-				jsonString := string(parsedJson)
-				return ParserResponse{true, jsonString}
+			if rowCounter != 0 && len(singleMap) > 0 {
+
+				parsedData = append(parsedData, singleMap)
 			}
-		} else {
-			return ParserResponse{}
+
 		}
 	}
+	if len(parsedData) > 0 {
+		parsedJson, err := json.MarshalIndent(parsedData, "", "  ")
+		if err != nil {
+			return ParserResponse{}
+		}
+		jsonString := string(parsedJson)
+		return ParserResponse{true, jsonString}
+	}
+	return ParserResponse{}
 }
