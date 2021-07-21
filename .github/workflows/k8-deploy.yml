@@ -20,6 +20,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   upload-docker-image:
+    needs: sonarcloud
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
