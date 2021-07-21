@@ -1,10 +1,10 @@
 # Gistify
 
-<!-- <p align="center">
-    <a href="https://sonarcloud.io/dashboard?id=lucid-dynamodb">
-        <img src="https://sonarcloud.io/api/project_badges/quality_gate?project=lucid-dynamodb"/>
+<p align="center">
+    <a href="https://sonarcloud.io/dashboard?id=gistify">
+        <img src="https://sonarcloud.io/api/project_badges/quality_gate?project=gistify"/>
     </a>
-</p> -->
+</p>
 <p align="center">
     <a href="https://goreportcard.com/report/github.com/dineshsonachalam/gistify">
        <img src="https://goreportcard.com/badge/github.com/dineshsonachalam/gistify"/>
