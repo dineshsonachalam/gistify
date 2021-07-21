@@ -14,7 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// getEnv return environmental variables
+// GetEnv return environmental variables
 func GetEnv() (string, string, []byte, string, string, string, string) {
 	ENV := utils.GetEnv()
 	GITHUB_CLIENT_ID := os.Getenv(fmt.Sprintf("GISTIFY_%s_GITHUB_CLIENT_ID", ENV))
@@ -32,6 +32,7 @@ func GetEnv() (string, string, []byte, string, string, string, string) {
 	return GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, JWT_SECRET_KEY, GIST_API_TOKEN, GISTIFY_APP_URL, DATABASE_URL, COOKIE_DOMAIN
 }
 
+// GithubOauthRedirect set JWT cookie & redirect to Github Oauth redirect URL
 func GithubOauthRedirect(c *gin.Context, GITHUB_CLIENT_ID string, GITHUB_CLIENT_SECRET string,
 	JWT_SECRET_KEY []byte, DATABASE_URL string, COOKIE_DOMAIN string, GISTIFY_APP_URL string) {
 	requestToken := c.Request.FormValue("code")
@@ -51,6 +52,7 @@ func GithubOauthRedirect(c *gin.Context, GITHUB_CLIENT_ID string, GITHUB_CLIENT_
 	c.Redirect(301, GISTIFY_APP_URL+userInfo["username"])
 }
 
+// CreateNewGist return status of GIST creation
 func CreateNewGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string,
 	GISTIFY_APP_URL string, DATABASE_URL string) {
 	const BEARER_SCHEMA = "Bearer"
@@ -128,6 +130,7 @@ func CreateNewGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string,
 	}
 }
 
+// DeleteGist return status of GIST deletion
 func DeleteGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string, DATABASE_URL string) {
 	const BEARER_SCHEMA = "Bearer"
 	authHeader := c.GetHeader("Authorization")
@@ -148,7 +151,7 @@ func DeleteGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string, DA
 			"Authorization": fmt.Sprintf("Bearer %s", GIST_API_TOKEN),
 			"Content-Type":  "application/json",
 		}
-		GistDeleteResponse := utils.DeleteRequest(gistURL, payload, headers)
+		GistDeleteResponse := utils.Request("DELETE", gistURL, payload, headers)
 		models.DeleteGist(DATABASE_URL, gistID, githubUserId)
 		if GistDeleteResponse.Status {
 			c.JSON(200, gin.H{
@@ -169,6 +172,7 @@ func DeleteGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string, DA
 	}
 }
 
+// GetAllGists return all GIST created by an user
 func GetAllGists(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
 	const BEARER_SCHEMA = "Bearer"
 	authHeader := c.GetHeader("Authorization")
@@ -196,6 +200,7 @@ func GetAllGists(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
 	}
 }
 
+// GetGist return a gist created by an user by gist ID
 func GetGist(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
 	gistID := c.Param("gistID")
 	const BEARER_SCHEMA = "Bearer"

@@ -33,7 +33,7 @@ func UploadJsonToGist(GIST_API_TOKEN string, fileName string, newFilename string
 	}`, newFilename, string(jsonBytes), fileName, appUrl, author)
 	jsonPayload := string(responseBody)
 	payload := strings.NewReader(jsonPayload)
-	uploadResponse := PostRequest(gistUrl, payload, headers)
+	uploadResponse := Request("POST", gistUrl, payload, headers)
 	if uploadResponse.Status {
 		isFileUploaded := true
 		gistID := fmt.Sprintf("%v", uploadResponse.ResponseBody["id"])

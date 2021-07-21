@@ -21,7 +21,7 @@ func GithubUserDetails(clientId string, clientSecret string, requestToken string
 	headers := map[string]string{
 		"accept": "application/json",
 	}
-	AccessTokenResponse := utils.PostRequest(accessTokenURL, payload, headers)
+	AccessTokenResponse := utils.Request("POST", accessTokenURL, payload, headers)
 	if AccessTokenResponse.Status {
 		accessToken := AccessTokenResponse.ResponseBody["access_token"]
 		githubUserDetailsUrl := "https://api.github.com/user"
@@ -29,7 +29,7 @@ func GithubUserDetails(clientId string, clientSecret string, requestToken string
 		headers := map[string]string{
 			"Authorization": fmt.Sprintf("Bearer %s", accessToken),
 		}
-		GithubUserDetailsResponse := utils.GetRequest(githubUserDetailsUrl, payload, headers)
+		GithubUserDetailsResponse := utils.Request("GET", githubUserDetailsUrl, payload, headers)
 		if GithubUserDetailsResponse.Status {
 			githubUserId := int(GithubUserDetailsResponse.ResponseBody["id"].(float64))
 			githubUsername := GithubUserDetailsResponse.ResponseBody["login"].(string)

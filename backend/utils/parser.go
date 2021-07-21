@@ -5,7 +5,6 @@ import (
 	"container/list"
 	"encoding/csv"
 	"encoding/json"
-	"fmt"
 	"strings"
 
 	"github.com/pelletier/go-toml"
@@ -17,6 +16,15 @@ import (
 type ParserResponse struct {
 	FileParsed bool
 	JsonString string
+}
+
+func GetParserResponse(parsedData []map[string]interface{}) ParserResponse {
+	parsedJson, err := json.MarshalIndent(parsedData, "", "  ")
+	if err != nil {
+		return ParserResponse{}
+	}
+	jsonString := string(parsedJson)
+	return ParserResponse{true, jsonString}
 }
 
 // YAMLToJSON convert YAML to JSON return map
@@ -74,13 +82,7 @@ func CSVToJSON(data []byte) ParserResponse {
 		}
 	}
 	if len(parsedData) > 0 {
-		fmt.Printf("var2 = %T\n", parsedData)
-		parsedJson, err := json.MarshalIndent(parsedData, "", "  ")
-		if err != nil {
-			return ParserResponse{}
-		}
-		jsonString := string(parsedJson)
-		return ParserResponse{true, jsonString}
+		return GetParserResponse(parsedData)
 	}
 	return ParserResponse{}
 }
@@ -119,12 +121,7 @@ func ExcelToJSON(data []byte) ParserResponse {
 		}
 	}
 	if len(parsedData) > 0 {
-		parsedJson, err := json.MarshalIndent(parsedData, "", "  ")
-		if err != nil {
-			return ParserResponse{}
-		}
-		jsonString := string(parsedJson)
-		return ParserResponse{true, jsonString}
+		return GetParserResponse(parsedData)
 	}
 	return ParserResponse{}
 }
