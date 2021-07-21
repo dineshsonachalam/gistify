@@ -18,6 +18,7 @@ type ParserResponse struct {
 	JsonString string
 }
 
+// GetParserResponse return Parsed JSON response
 func GetParserResponse(parsedData []map[string]interface{}) ParserResponse {
 	parsedJson, err := json.MarshalIndent(parsedData, "", "  ")
 	if err != nil {
