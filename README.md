@@ -13,3 +13,9 @@
         <img src="https://app.codacy.com/project/badge/Grade/0df66242e68d46dba6d9886d3de2f79e"/>
     </a>
 </p>
+
+### Start the application
+
+```sh
+sh dev-startup.sh
+```
