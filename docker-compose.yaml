@@ -15,21 +15,5 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data:z # persist data even if container shuts down
   
-  # backend:
-  #   image: "dineshsonachalam/gistify-backend:latest"
-  #   environment:
-  #     - GISTIFY_APP_ENV=${GISTIFY_APP_ENV}
-  #     - GISTIFY_DEV_APP_URL=${GISTIFY_DEV_APP_URL}
-  #     - GISTIFY_DEV_GITHUB_CLIENT_ID=${GISTIFY_DEV_GITHUB_CLIENT_ID}
-  #     - GISTIFY_DEV_GITHUB_CLIENT_SECRET=${GISTIFY_DEV_GITHUB_CLIENT_SECRET}
-  #     - GISTIFY_DEV_JWT_SECRET_KEY=${GISTIFY_DEV_JWT_SECRET_KEY}
-  #     - GISTIFY_DEV_GIST_API_TOKEN=${GISTIFY_DEV_GIST_API_TOKEN}"
-  #   networks:
-  #     - frontend
-  #   ports:
-  #     - "8003:8003"
-  #   depends_on:
-  #     - postgres
-
 networks:
   frontend:
