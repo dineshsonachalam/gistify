@@ -10,7 +10,7 @@
     "@testing-library/user-event": "^12.1.10",
     "antd": "^4.15.2",
     "antd-mobile": "^2.3.4",
-    "cypress": "^7.3.0",
+    "cypress": "^7.7.0",
     "env-cmd": "^10.1.0",
     "jwt-decode": "^3.1.2",
     "lodash.throttle": "^4.1.1",
