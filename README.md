@@ -23,4 +23,4 @@
 
 ## Demo
 1. <a href="https://gistify.dineshsonachalam.com/">Live demo</a>  
-<!-- 2. <a href="https://vimeo.com/589852893">Video demo</a>  -->
+2. <a href="https://vimeo.com/590610461">Video demo</a> 
