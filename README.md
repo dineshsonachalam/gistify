@@ -1,8 +1,18 @@
-# Gistify
+<p align="center">
+  <img src="https://i.imgur.com/hVDyC3I.png" alt="Gistify">
+</p>
+<p align="center">
+    <em>Powered by Go, PostgreSQL, React, Redux, Kubernetes, Cypress E2E and Github CI/CD</em>
+</p>
+<p  align="center">
+  <a href="https://github.com/dineshsonachalam/Gistify/actions/workflows/k8-deploy.yml" alt="CI/CD status">
+      <img src="https://github.com/dineshsonachalam/Gistify/actions/workflows/k8-deploy.yml/badge.svg" />
+  </a>
+</p>
 
 <p align="center">
     <a href="https://sonarcloud.io/dashboard?id=gistify">
-        <img src="https://sonarcloud.io/api/project_badges/quality_gate?project=gistify"/>
+        <img src="https://sonarcloud.io/images/project_badges/sonarcloud-white.svg"/>
     </a>
 </p>
 <p align="center">
@@ -14,8 +24,6 @@
     </a>
 </p>
 
-### Start the application
-
-```sh
-sh dev-startup.sh
-```
+## Demo
+1. <a href="https://gistify.dineshsonachalam.com/">Live demo</a>  
+<!-- 2. <a href="https://vimeo.com/589852893">Video demo</a>  -->
