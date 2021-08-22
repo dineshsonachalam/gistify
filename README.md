@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="https://i.imgur.com/hVDyC3I.png" alt="Gistify">
+  <a href="https://gistify.dineshsonachalam.com/">
+    <img src="https://i.imgur.com/hVDyC3I.png" alt="Gistify">
+  </a>
 </p>
 <p align="center">
     <em>Powered by Go, PostgreSQL, React, Redux, Kubernetes, Cypress E2E and Github CI/CD</em>
