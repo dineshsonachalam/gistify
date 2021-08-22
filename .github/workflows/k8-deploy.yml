@@ -6,72 +6,15 @@ on:
       - '**'  # matches every branch
   
 jobs:
-  sonarcloud:
-    name: SonarCloud
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ github.token }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  upload-docker-image:
+  test:
     needs: sonarcloud
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build backend and frontend image
-        run: |
-          npm i --prefix frontend
-          npm run build --prefix frontend
-          docker build --no-cache -t dineshsonachalam/gistify-backend:latest -f backend.Dockerfile .
-          docker build --no-cache -t dineshsonachalam/gistify-frontend:latest -f frontend.Dockerfile .  
-
-      - name: Log into registry
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-
       - name: Push image
         run: |
-          docker push dineshsonachalam/gistify-backend:latest
-          docker push dineshsonachalam/gistify-frontend:latest
-
-  deploy-to-k8-cluster:
-    needs: upload-docker-image
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: Backend deployment rolling restart to fetch recently build docker image from docker hub.
-      uses: steebchen/kubectl@master
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      with:
-        args: rollout restart deployment gistify-api -n=dinesh
-
-    - name: Verify deployment for Backend app
-      uses: steebchen/kubectl@master
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-        KUBECTL_VERSION: "1.15"
-      with:
-        args: rollout status deployment/gistify-api -n=dinesh
-
-    - name: Frontend deployment rolling restart to fetch recently build docker image from docker hub.
-      uses: steebchen/kubectl@master
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      with:
-        args: rollout restart deployment gistify-ui -n=dinesh
-
-    - name: Verify deployment for Frontend app
-      uses: steebchen/kubectl@master
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-        KUBECTL_VERSION: "1.15"
-      with:
-        args: rollout status deployment/gistify-ui -n=dinesh
+          pwd
+          ls /home/runner/work/gistify/gistify/frontend/
+          
