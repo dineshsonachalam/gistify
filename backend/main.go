@@ -16,56 +16,56 @@ import (
 
 // GetEnv return environmental variables
 func GetEnv() (string, string, []byte, string, string, string, string) {
-	ENV := utils.GetEnv()
-	GITHUB_CLIENT_ID := os.Getenv(fmt.Sprintf("GISTIFY_%s_GITHUB_CLIENT_ID", ENV))
-	GITHUB_CLIENT_SECRET := os.Getenv(fmt.Sprintf("GISTIFY_%s_GITHUB_CLIENT_SECRET", ENV))
-	JWT_SECRET_KEY := []byte(os.Getenv(fmt.Sprintf("GISTIFY_%s_JWT_SECRET_KEY", ENV)))
-	GIST_API_TOKEN := os.Getenv(fmt.Sprintf("GISTIFY_%s_GIST_API_TOKEN", ENV))
-	GISTIFY_APP_URL := os.Getenv(fmt.Sprintf("GISTIFY_%s_APP_URL", ENV))
-	DATABASE_URL := "postgres://dinesh:simple@postgres:5432/dinesh-micro-apps"
-	var COOKIE_DOMAIN string
-	if ENV == "DEV" {
-		COOKIE_DOMAIN = ".localhost"
+	env := utils.GetEnv()
+	githubClientID := os.Getenv(fmt.Sprintf("GISTIFY_%s_GITHUB_CLIENT_ID", env))
+	githubClientSecret := os.Getenv(fmt.Sprintf("GISTIFY_%s_GITHUB_CLIENT_SECRET", env))
+	jwtSecretKey := []byte(os.Getenv(fmt.Sprintf("GISTIFY_%s_JWT_SECRET_KEY", env)))
+	gistApiToken := os.Getenv(fmt.Sprintf("GISTIFY_%s_GIST_API_TOKEN", env))
+	gistifyAppURL := os.Getenv(fmt.Sprintf("GISTIFY_%s_APP_URL", env))
+	databaseURL := "postgres://dinesh:simple@postgres:5432/dinesh-micro-apps"
+	var cookieDomain string
+	if env == "DEV" {
+		cookieDomain = ".localhost"
 	} else {
-		COOKIE_DOMAIN = ".dineshsonachalam.com"
+		cookieDomain = ".dineshsonachalam.com"
 	}
-	return GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, JWT_SECRET_KEY, GIST_API_TOKEN, GISTIFY_APP_URL, DATABASE_URL, COOKIE_DOMAIN
+	return githubClientID, githubClientSecret, jwtSecretKey, gistApiToken, gistifyAppURL, databaseURL, cookieDomain
 }
 
 // GithubOauthRedirect set JWT cookie & redirect to Github Oauth redirect URL
-func GithubOauthRedirect(c *gin.Context, GITHUB_CLIENT_ID string, GITHUB_CLIENT_SECRET string,
-	JWT_SECRET_KEY []byte, DATABASE_URL string, COOKIE_DOMAIN string, GISTIFY_APP_URL string) {
+func GithubOauthRedirect(c *gin.Context, githubClientID string, githubClientSecret string,
+	jwtSecretKey []byte, databaseURL string, cookieDomain string, gistifyAppURL string) {
 	requestToken := c.Request.FormValue("code")
-	userDetails := auth.GithubUserDetails(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, requestToken)
+	userDetails := auth.GithubUserDetails(githubClientID, githubClientSecret, requestToken)
 	userInfo := make(map[string]string)
 	userInfo["id"] = userDetails.Id
 	userInfo["username"] = userDetails.Username
-	jwtAccessToken := auth.CreateJwtAccessToken(userInfo, JWT_SECRET_KEY)
-	models.CreateUserTable(DATABASE_URL)
-	models.CreateGistTable(DATABASE_URL)
-	isUserAlreadyPresent, _ := models.GetUser(DATABASE_URL, userInfo["id"])
+	jwtAccessToken := auth.CreateJwtAccessToken(userInfo, jwtSecretKey)
+	models.CreateUserTable(databaseURL)
+	models.CreateGistTable(databaseURL)
+	isUserAlreadyPresent, _ := models.GetUser(databaseURL, userInfo["id"])
 	if !isUserAlreadyPresent {
-		models.CreateUser(DATABASE_URL, userInfo["id"], userInfo["username"], userDetails.Email)
+		models.CreateUser(databaseURL, userInfo["id"], userInfo["username"], userDetails.Email)
 	}
 	// Expiry time in minutes - Setting expiry time as 40 minute
-	c.SetCookie("token", jwtAccessToken, (40 * 60), "/", COOKIE_DOMAIN, false, false)
-	c.Redirect(301, GISTIFY_APP_URL+userInfo["username"])
+	c.SetCookie("token", jwtAccessToken, (40 * 60), "/", cookieDomain, false, false)
+	c.Redirect(301, gistifyAppURL+userInfo["username"])
 }
 
 // CreateNewGist return status of GIST creation
-func CreateNewGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string,
-	GISTIFY_APP_URL string, DATABASE_URL string) {
+func CreateNewGist(c *gin.Context, jwtSecretKey []byte, gistApiToken string,
+	gistifyAppURL string, databaseURL string) {
 	const BEARER_SCHEMA = "Bearer"
 	authHeader := c.GetHeader("Authorization")
 	tokenString := authHeader[len(BEARER_SCHEMA)+1:]
-	isValidJwtToken := auth.ValidateJwtAccessToken(tokenString, JWT_SECRET_KEY)
+	isValidJwtToken := auth.ValidateJwtAccessToken(tokenString, jwtSecretKey)
 	if isValidJwtToken {
 		tokenExpiry, githubUserId, username := auth.IsJwtAccessTokenExpiryInFiveMin(tokenString)
 		userInfo := make(map[string]string)
 		userInfo["id"] = githubUserId
 		userInfo["username"] = username
 		if tokenExpiry {
-			tokenString = auth.CreateJwtAccessToken(userInfo, JWT_SECRET_KEY)
+			tokenString = auth.CreateJwtAccessToken(userInfo, jwtSecretKey)
 		}
 		formFile, err := c.FormFile("uploadfile")
 		if err != nil {
@@ -100,8 +100,8 @@ func CreateNewGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string,
 			FileParsed := ParserResponse.FileParsed
 			JsonString := ParserResponse.JsonString
 			if FileParsed {
-				UploadResponse := utils.UploadJsonToGist(GIST_API_TOKEN, filename, newFilename, JsonString, userInfo["username"], GISTIFY_APP_URL)
-				models.CreateGist(DATABASE_URL, UploadResponse.GistId, newFilename, fileExtension, UploadResponse.GistURL, githubUserId)
+				UploadResponse := utils.UploadJsonToGist(gistApiToken, filename, newFilename, JsonString, userInfo["username"], gistifyAppURL)
+				models.CreateGist(databaseURL, UploadResponse.GistId, newFilename, fileExtension, UploadResponse.GistURL, githubUserId)
 				c.JSON(200, gin.H{
 					"isFileUploaded": UploadResponse.FileUpload,
 					"gistURL":        UploadResponse.GistURL,
@@ -131,28 +131,28 @@ func CreateNewGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string,
 }
 
 // DeleteGist return status of GIST deletion
-func DeleteGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string, DATABASE_URL string) {
+func DeleteGist(c *gin.Context, jwtSecretKey []byte, gistApiToken string, databaseURL string) {
 	const BEARER_SCHEMA = "Bearer"
 	authHeader := c.GetHeader("Authorization")
 	tokenString := authHeader[len(BEARER_SCHEMA)+1:]
-	isValidJwtToken := auth.ValidateJwtAccessToken(tokenString, JWT_SECRET_KEY)
+	isValidJwtToken := auth.ValidateJwtAccessToken(tokenString, jwtSecretKey)
 	if isValidJwtToken {
 		tokenExpiry, githubUserId, username := auth.IsJwtAccessTokenExpiryInFiveMin(tokenString)
 		userInfo := make(map[string]string)
 		userInfo["id"] = githubUserId
 		userInfo["username"] = username
 		if tokenExpiry {
-			tokenString = auth.CreateJwtAccessToken(userInfo, JWT_SECRET_KEY)
+			tokenString = auth.CreateJwtAccessToken(userInfo, jwtSecretKey)
 		}
 		gistID := c.Param("gistID")
 		gistURL := fmt.Sprintf("https://api.github.com/gists/%v", gistID)
 		payload := strings.NewReader(`{}`)
 		headers := map[string]string{
-			"Authorization": fmt.Sprintf("Bearer %s", GIST_API_TOKEN),
+			"Authorization": fmt.Sprintf("Bearer %s", gistApiToken),
 			"Content-Type":  "application/json",
 		}
 		GistDeleteResponse := utils.Request("DELETE", gistURL, payload, headers)
-		models.DeleteGist(DATABASE_URL, gistID, githubUserId)
+		models.DeleteGist(databaseURL, gistID, githubUserId)
 		if GistDeleteResponse.Status {
 			c.JSON(200, gin.H{
 				"isDeleted":      true,
@@ -173,20 +173,20 @@ func DeleteGist(c *gin.Context, JWT_SECRET_KEY []byte, GIST_API_TOKEN string, DA
 }
 
 // GetAllGists return all GIST created by an user
-func GetAllGists(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
+func GetAllGists(c *gin.Context, jwtSecretKey []byte, databaseURL string) {
 	const BEARER_SCHEMA = "Bearer"
 	authHeader := c.GetHeader("Authorization")
 	tokenString := authHeader[len(BEARER_SCHEMA)+1:]
-	isValidJwtToken := auth.ValidateJwtAccessToken(tokenString, JWT_SECRET_KEY)
+	isValidJwtToken := auth.ValidateJwtAccessToken(tokenString, jwtSecretKey)
 	if isValidJwtToken {
 		tokenExpiry, id, username := auth.IsJwtAccessTokenExpiryInFiveMin(tokenString)
 		userInfo := make(map[string]string)
 		userInfo["id"] = id
 		userInfo["username"] = username
 		if tokenExpiry {
-			tokenString = auth.CreateJwtAccessToken(userInfo, JWT_SECRET_KEY)
+			tokenString = auth.CreateJwtAccessToken(userInfo, jwtSecretKey)
 		}
-		gistData := models.GetAllGist(DATABASE_URL, id)
+		gistData := models.GetAllGist(databaseURL, id)
 		c.JSON(200, gin.H{
 			"isDeleted":      true,
 			"gistData":       gistData,
@@ -201,21 +201,21 @@ func GetAllGists(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
 }
 
 // GetGist return a gist created by an user by gist ID
-func GetGist(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
+func GetGist(c *gin.Context, jwtSecretKey []byte, databaseURL string) {
 	gistID := c.Param("gistID")
 	const BEARER_SCHEMA = "Bearer"
 	authHeader := c.GetHeader("Authorization")
 	tokenString := authHeader[len(BEARER_SCHEMA)+1:]
-	isValidJwtToken := auth.ValidateJwtAccessToken(tokenString, JWT_SECRET_KEY)
+	isValidJwtToken := auth.ValidateJwtAccessToken(tokenString, jwtSecretKey)
 	if isValidJwtToken {
 		tokenExpiry, id, username := auth.IsJwtAccessTokenExpiryInFiveMin(tokenString)
 		userInfo := make(map[string]string)
 		userInfo["id"] = id
 		userInfo["username"] = username
 		if tokenExpiry {
-			tokenString = auth.CreateJwtAccessToken(userInfo, JWT_SECRET_KEY)
+			tokenString = auth.CreateJwtAccessToken(userInfo, jwtSecretKey)
 		}
-		gistData := models.GetGist(DATABASE_URL, gistID)
+		gistData := models.GetGist(databaseURL, gistID)
 		c.JSON(200, gin.H{
 			"isDeleted":      true,
 			"gistData":       gistData,
@@ -230,35 +230,35 @@ func GetGist(c *gin.Context, JWT_SECRET_KEY []byte, DATABASE_URL string) {
 }
 
 func main() {
-	GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, JWT_SECRET_KEY, GIST_API_TOKEN, GISTIFY_APP_URL, DATABASE_URL, COOKIE_DOMAIN := GetEnv()
+	githubClientID, githubClientSecret, jwtSecretKey, gistApiToken, gistifyAppURL, databaseURL, cookieDomain := GetEnv()
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
-	if (len(GITHUB_CLIENT_ID) > 0) && (len(GITHUB_CLIENT_SECRET) > 0) {
+	if (len(githubClientID) > 0) && (len(githubClientSecret) > 0) {
 		// Github Oauth redirect
 		r.GET("/oauth/redirect", func(c *gin.Context) {
-			GithubOauthRedirect(c, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET,
-				JWT_SECRET_KEY, DATABASE_URL, COOKIE_DOMAIN,
-				GISTIFY_APP_URL)
+			GithubOauthRedirect(c, githubClientID, githubClientSecret,
+				jwtSecretKey, databaseURL, cookieDomain,
+				gistifyAppURL)
 		})
 
 		// Create a new gist
 		r.POST("/gists", func(c *gin.Context) {
-			CreateNewGist(c, JWT_SECRET_KEY, GIST_API_TOKEN, GISTIFY_APP_URL, DATABASE_URL)
+			CreateNewGist(c, jwtSecretKey, gistApiToken, gistifyAppURL, databaseURL)
 		})
 
 		// Delete a gist
 		r.DELETE("/gists/:gistID", func(c *gin.Context) {
-			DeleteGist(c, JWT_SECRET_KEY, GIST_API_TOKEN, DATABASE_URL)
+			DeleteGist(c, jwtSecretKey, gistApiToken, databaseURL)
 		})
 
 		// Get all gists created by user
 		r.GET("/gists", func(c *gin.Context) {
-			GetAllGists(c, JWT_SECRET_KEY, DATABASE_URL)
+			GetAllGists(c, jwtSecretKey, databaseURL)
 		})
 
 		// Get a gist by GIST id
 		r.GET("/gists/:gistID", func(c *gin.Context) {
-			GetGist(c, JWT_SECRET_KEY, DATABASE_URL)
+			GetGist(c, jwtSecretKey, databaseURL)
 		})
 		r.Run(":8003")
 	} else {
