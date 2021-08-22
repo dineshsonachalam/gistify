@@ -15,5 +15,7 @@ jobs:
       - name: Push image
         run: |
           pwd
+          ls /home/runner/work/gistify/gistify/
           ls /home/runner/work/gistify/gistify/frontend/
+          cat /home/runner/work/gistify/gistify/README.md
           
