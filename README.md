@@ -3,11 +3,8 @@
     <img src="https://i.imgur.com/hVDyC3I.png" alt="Gistify">
   </a>
 </p>
-
 <p align="center">
-    <a href="https://sonarcloud.io/dashboard?id=gistify">
-        <img src="https://sonarcloud.io/images/project_badges/sonarcloud-white.svg"/>
-    </a>
+    <em>Powered by Go, PostgreSQL, React, Redux, Kubernetes, Cypress E2E and Github CI/CD</em>
 </p>
 <p align="center">
     <a href="https://goreportcard.com/report/github.com/dineshsonachalam/gistify">
