@@ -1,4 +1,4 @@
-FROM golang:rc-buster
+FROM golang:1.17.2-buster
 
 WORKDIR /go/src/app
 
